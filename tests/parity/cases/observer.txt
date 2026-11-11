@@ -1,0 +1,105 @@
+# Parity cases for `ha observer`. Format: see tests/parity.py.
+
+# --- help / tree ---
+== observer
+== observer --help
+== observer bogus
+== help observer
+== observer info --help
+== observer stats --help
+== observer update --help
+== __complete observer ""
+== __completeNoDesc observer ""
+# --- info ---
+== observer info
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== observer in
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== observer inf
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== observer info (empty data)
+args: observer info
+== observer info --raw-json
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== observer info extra
+== observer info --bogus
+== observer info api error
+args: observer info
+response: error:400:Something failed
+== observer info api error raw json
+args: observer info --raw-json
+response: error
+== observer info 500 text
+args: observer info
+response: text:500
+== observer info connection refused
+args: observer info --endpoint 127.0.0.1:1
+== __complete observer info ""
+== __complete observer info -
+# --- stats ---
+== observer stats
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== observer status
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== observer stat
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== observer stats (empty data)
+args: observer stats
+== observer stats --raw-json
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== observer stats extra
+== observer stats --bogus
+== observer stats api error
+args: observer stats
+response: error:400:Something failed
+== observer stats api error raw json
+args: observer stats --raw-json
+response: error
+== observer stats 500 text
+args: observer stats
+response: text:500
+== observer stats connection refused
+args: observer stats --endpoint 127.0.0.1:1
+== __complete observer stats ""
+== __complete observer stats -
+# --- update ---
+== observer update
+== observer upgrade
+== observer downgrade
+== observer up
+== observer down
+== observer update data response
+args: observer update
+response: data:{"job_id":"abc"}
+== observer update --raw-json
+== observer update --no-progress
+== observer update extra
+== observer update --bogus
+== observer update api error
+args: observer update
+response: error:400:Something failed
+== observer update api error raw json
+args: observer update --raw-json
+response: error
+== observer update 502
+args: observer update
+response: text:502
+== observer update connection refused
+args: observer update --endpoint 127.0.0.1:1
+== __complete observer update ""
+== __complete observer update -
+== observer update --version 2025.08.0
+== observer upgrade --version=5
+== observer downgrade --version ""
+== observer down --version
+== observer update --version 1 --version 2
+== observer update version error
+args: observer update --version 1
+response: error:400:Version 1 not found
+== observer update --raw-json --version 3
+response: data:{"a":1}
+== __complete observer update --version ""
+== __complete observer update --ver
+== observer logs
+== observer restart
+== observer st

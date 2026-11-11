@@ -1,0 +1,19 @@
+{"result":"ok","data":{"addons":[
+{"name":"Terminal & SSH","slug":"core_ssh","available":true,"installed":true,"update_available":false,"url":"https://example.com/ssh"},
+{"name":"Mosquitto broker","slug":"core_mosquitto","available":true,"installed":true,"update_available":true,"url":""},
+{"name":"Samba","slug":"core_samba","available":true,"installed":false,"update_available":false},
+{"name":"Unavailable","slug":"core_na","available":false,"installed":false,"update_available":false},
+{"name":"Unavailable installed","slug":"core_nai","available":false,"installed":true,"update_available":true},
+{"slug":"bare"},
+{"name":"No slug"},
+{"name":"Odd types","slug":"odd","available":"no","installed":1,"update_available":null,"url":5},
+"not an object"
+],"repositories":[
+{"slug":"core","name":"Official apps","url":"https://github.com/home-assistant/addons","maintainer":"HA"},
+{"slug":"local","name":"Local apps","url":""},
+{"slug":"94cfad5a","name":"","url":"https://github.com/home-assistant/addons-example"},
+{"slug":"bare"},
+{"name":"No slug"},
+{"slug":5},
+"not an object"
+]}}

@@ -1,0 +1,407 @@
+# Parity cases for `ha supervisor`. Format: see tests/parity.py.
+
+# --- help / tree ---
+== supervisor
+== supervisor --help
+== supervisor bogus
+== help supervisor
+== supervisor available-updates --help
+== supervisor info --help
+== supervisor logs --help
+== supervisor options --help
+== supervisor reload --help
+== supervisor repair --help
+== supervisor restart --help
+== supervisor stats --help
+== supervisor update --help
+== __complete supervisor ""
+== __completeNoDesc supervisor ""
+== super info
+response: data
+== su stats
+response: data
+# --- info ---
+== supervisor info
+response: data:{"version":"2025.08.0","channel":"stable","arch":"amd64","supported":true,"healthy":true,"ip_address":"172.30.32.2","timezone":"Europe/Amsterdam","logging":"info","debug":false,"debug_block":false,"diagnostics":null,"auto_update":true,"addons":[{"name":"Terminal","slug":"core_ssh","version":"1.0","state":"started"}],"addons_repositories":[],"feature_flags":{"supervisor_v2_api":false}}
+== supervisor in
+response: data:{"version":"2025.08.0","channel":"stable","arch":"amd64","supported":true,"healthy":true,"ip_address":"172.30.32.2","timezone":"Europe/Amsterdam","logging":"info","debug":false,"debug_block":false,"diagnostics":null,"auto_update":true,"addons":[{"name":"Terminal","slug":"core_ssh","version":"1.0","state":"started"}],"addons_repositories":[],"feature_flags":{"supervisor_v2_api":false}}
+== supervisor inf
+response: data:{"version":"2025.08.0","channel":"stable","arch":"amd64","supported":true,"healthy":true,"ip_address":"172.30.32.2","timezone":"Europe/Amsterdam","logging":"info","debug":false,"debug_block":false,"diagnostics":null,"auto_update":true,"addons":[{"name":"Terminal","slug":"core_ssh","version":"1.0","state":"started"}],"addons_repositories":[],"feature_flags":{"supervisor_v2_api":false}}
+== supervisor info (empty data)
+args: supervisor info
+== supervisor info --raw-json
+response: data:{"version":"2025.08.0","channel":"stable","arch":"amd64","supported":true,"healthy":true,"ip_address":"172.30.32.2","timezone":"Europe/Amsterdam","logging":"info","debug":false,"debug_block":false,"diagnostics":null,"auto_update":true,"addons":[{"name":"Terminal","slug":"core_ssh","version":"1.0","state":"started"}],"addons_repositories":[],"feature_flags":{"supervisor_v2_api":false}}
+== supervisor info extra
+== supervisor info --bogus
+== supervisor info api error
+args: supervisor info
+response: error:400:Something failed
+== supervisor info api error raw json
+args: supervisor info --raw-json
+response: error
+== supervisor info 500 text
+args: supervisor info
+response: text:500
+== supervisor info connection refused
+args: supervisor info --endpoint 127.0.0.1:1
+== __complete supervisor info ""
+== __complete supervisor info -
+# --- stats ---
+== supervisor stats
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== supervisor status
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== supervisor stat
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== supervisor st
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== supervisor stats (empty data)
+args: supervisor stats
+== supervisor stats --raw-json
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== supervisor stats extra
+== supervisor stats --bogus
+== supervisor stats api error
+args: supervisor stats
+response: error:400:Something failed
+== supervisor stats api error raw json
+args: supervisor stats --raw-json
+response: error
+== supervisor stats 500 text
+args: supervisor stats
+response: text:500
+== supervisor stats connection refused
+args: supervisor stats --endpoint 127.0.0.1:1
+== __complete supervisor stats ""
+== __complete supervisor stats -
+# --- available-updates ---
+== supervisor available-updates
+response: data:{"available_updates":[{"update_type":"core","panel_path":"/update-available/core","version_latest":"2025.9.0"},{"update_type":"addon","name":"Terminal","icon":"/addons/core_ssh/icon","panel_path":"/update-available/core_ssh","version_latest":"9.9"}]}
+== supervisor available_updates
+response: data:{"available_updates":[{"update_type":"core","panel_path":"/update-available/core","version_latest":"2025.9.0"},{"update_type":"addon","name":"Terminal","icon":"/addons/core_ssh/icon","panel_path":"/update-available/core_ssh","version_latest":"9.9"}]}
+== supervisor updates
+response: data:{"available_updates":[{"update_type":"core","panel_path":"/update-available/core","version_latest":"2025.9.0"},{"update_type":"addon","name":"Terminal","icon":"/addons/core_ssh/icon","panel_path":"/update-available/core_ssh","version_latest":"9.9"}]}
+== supervisor available-updates (empty data)
+args: supervisor available-updates
+== supervisor available-updates --raw-json
+response: data:{"available_updates":[{"update_type":"core","panel_path":"/update-available/core","version_latest":"2025.9.0"},{"update_type":"addon","name":"Terminal","icon":"/addons/core_ssh/icon","panel_path":"/update-available/core_ssh","version_latest":"9.9"}]}
+== supervisor available-updates extra
+== supervisor available-updates --bogus
+== supervisor available-updates api error
+args: supervisor available-updates
+response: error:400:Something failed
+== supervisor available-updates api error raw json
+args: supervisor available-updates --raw-json
+response: error
+== supervisor available-updates 500 text
+args: supervisor available-updates
+response: text:500
+== supervisor available-updates connection refused
+args: supervisor available-updates --endpoint 127.0.0.1:1
+== __complete supervisor available-updates ""
+== __complete supervisor available-updates -
+== supervisor available-updates empty list
+args: supervisor available-updates
+response: data:{"available_updates":[]}
+# --- logs ---
+== supervisor logs
+response: logs
+== supervisor log --follow
+response: logs
+== supervisor lg -f -n 100
+response: logs
+== supervisor logs --lines 1
+response: logs
+== supervisor logs -n0
+response: logs
+== supervisor logs --boot -1
+response: logs
+== supervisor logs -b 2 -f -v
+response: logs
+== supervisor logs --boot "a b/c" --verbose
+response: logs
+== supervisor logs -fvn5
+response: logs
+== supervisor logs --follow=false --verbose=true
+response: logs
+== supervisor logs --follow false
+== supervisor logs --lines x
+== supervisor logs --lines -1
+== supervisor logs --lines
+== supervisor logs -x
+== supervisor logs -b
+== supervisor logs extra
+== supervisor logs error status
+args: supervisor logs
+response: text:500:boom\n
+== supervisor logs json error body
+args: supervisor logs
+response: error:400:No such boot
+== supervisor logs connection refused
+args: supervisor logs --endpoint 127.0.0.1:1
+== __complete supervisor logs ""
+== __complete supervisor logs -
+== __complete supervisor logs --follow=
+== __complete supervisor logs --lines ""
+== __complete supervisor logs --verbose ""
+== __complete supervisor logs --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete supervisor logs -b a
+response: data:{"boots":{"0":"abcdef","-1":"bcdefa"}}
+== __complete supervisor logs --boot= (api error)
+args: __complete supervisor logs --boot=
+response: error
+# --- reload ---
+== supervisor reload
+== supervisor refresh
+== supervisor re
+== supervisor reload data response
+args: supervisor reload
+response: data:{"job_id":"abc"}
+== supervisor reload --raw-json
+== supervisor reload --no-progress
+== supervisor reload extra
+== supervisor reload --bogus
+== supervisor reload api error
+args: supervisor reload
+response: error:400:Something failed
+== supervisor reload api error raw json
+args: supervisor reload --raw-json
+response: error
+== supervisor reload 502
+args: supervisor reload
+response: text:502
+== supervisor reload connection refused
+args: supervisor reload --endpoint 127.0.0.1:1
+== __complete supervisor reload ""
+== __complete supervisor reload -
+# --- repair ---
+== supervisor repair
+== supervisor rep
+== supervisor fix
+== supervisor repair data response
+args: supervisor repair
+response: data:{"job_id":"abc"}
+== supervisor repair --raw-json
+== supervisor repair --no-progress
+== supervisor repair extra
+== supervisor repair --bogus
+== supervisor repair api error
+args: supervisor repair
+response: error:400:Something failed
+== supervisor repair api error raw json
+args: supervisor repair --raw-json
+response: error
+== supervisor repair 502
+args: supervisor repair
+response: text:502
+== supervisor repair connection refused
+args: supervisor repair --endpoint 127.0.0.1:1
+== __complete supervisor repair ""
+== __complete supervisor repair -
+# --- restart ---
+== supervisor restart
+== supervisor reboot
+== supervisor restart data response
+args: supervisor restart
+response: data:{"job_id":"abc"}
+== supervisor restart --raw-json
+== supervisor restart --no-progress
+== supervisor restart extra
+== supervisor restart --bogus
+== supervisor restart api error
+args: supervisor restart
+response: error:400:Something failed
+== supervisor restart api error raw json
+args: supervisor restart --raw-json
+response: error
+== supervisor restart 502
+args: supervisor restart
+response: text:502
+== supervisor restart connection refused
+args: supervisor restart --endpoint 127.0.0.1:1
+== __complete supervisor restart ""
+== __complete supervisor restart -
+# --- update ---
+== supervisor update
+== supervisor upgrade
+== supervisor downgrade
+== supervisor up
+== supervisor down
+== supervisor update data response
+args: supervisor update
+response: data:{"job_id":"abc"}
+== supervisor update --raw-json
+== supervisor update --no-progress
+== supervisor update extra
+== supervisor update --bogus
+== supervisor update api error
+args: supervisor update
+response: error:400:Something failed
+== supervisor update api error raw json
+args: supervisor update --raw-json
+response: error
+== supervisor update 502
+args: supervisor update
+response: text:502
+== supervisor update connection refused
+args: supervisor update --endpoint 127.0.0.1:1
+== __complete supervisor update ""
+== __complete supervisor update -
+== supervisor update --version 2025.08.0
+== supervisor upgrade --version=5
+== supervisor downgrade --version ""
+== supervisor down --version
+== supervisor update --version 1 --version 2
+== supervisor update version error
+args: supervisor update --version 1
+response: error:400:Version 1 not found
+== supervisor update --raw-json --version 3
+response: data:{"a":1}
+== __complete supervisor update --version ""
+== __complete supervisor update --ver
+# --- options ---
+== supervisor options
+== supervisor option
+== supervisor opt
+== supervisor opts
+== supervisor op
+== supervisor options data response
+args: supervisor options
+response: data:{"job_id":"abc"}
+== supervisor options --raw-json
+== supervisor options --no-progress
+== supervisor options extra
+== supervisor options --bogus
+== supervisor options api error
+args: supervisor options
+response: error:400:Something failed
+== supervisor options api error raw json
+args: supervisor options --raw-json
+response: error
+== supervisor options 502
+args: supervisor options
+response: text:502
+== supervisor options connection refused
+args: supervisor options --endpoint 127.0.0.1:1
+== __complete supervisor options ""
+== __complete supervisor options -
+== supervisor options --hostname myhost
+== supervisor options --hostname ""
+== supervisor options --hostname
+== supervisor options --channel beta
+== supervisor options -c dev
+== supervisor options -cstable
+== supervisor options --channel ""
+== supervisor options --channel=bogus
+== supervisor options --detect-blocking-io on
+== supervisor options --detect-blocking-io=on-at-startup
+== supervisor options --detect-blocking-io ""
+== supervisor options --detect_blocking_io on
+== supervisor options --timezone Europe/Amsterdam
+== supervisor options -t UTC
+== supervisor options -t ""
+== supervisor options --logging debug
+== supervisor options -l warning
+== supervisor options --logging=""
+== supervisor options -lc
+== supervisor options --debug
+== supervisor options --debug=true
+== supervisor options --debug=false
+== supervisor options --debug true
+== supervisor options --debug-block
+== supervisor options --debug-block=true
+== supervisor options --debug-block=false
+== supervisor options --diagnostics
+== supervisor options --diagnostics=true
+== supervisor options --diagnostics=false
+== supervisor options --diagnostics=maybe
+== supervisor options --auto-update
+== supervisor options --auto-update=false
+== supervisor options --auto-update=true
+== supervisor options --auto-update false
+== supervisor options --feature-flag supervisor_v2_api=true
+== supervisor options --feature-flag supervisor_v2_api
+== supervisor options --feature-flag a=false --feature-flag b=1 --feature-flag c=T
+== supervisor options --feature-flag z=true --feature-flag a=true --feature-flag z=false
+== supervisor options --feature-flag a=b=c
+== supervisor options --feature-flag a=
+== supervisor options --feature-flag a=yes
+== supervisor options --feature-flag a=TRUE --feature-flag b=False --feature-flag c=0 --feature-flag d=f --feature-flag e=F --feature-flag g=t --feature-flag h=True --feature-flag i=FALSE
+== supervisor options --feature-flag a=tRue
+== supervisor options --feature-flag " spaced =true"
+== supervisor options --feature-flag " =true"
+== supervisor options --feature-flag =true
+== supervisor options --feature-flag ""
+== supervisor options --feature-flag "a\"b=x y"
+== supervisor options --feature-flag ok=true --feature-flag =false
+== supervisor options --feature-flag
+== supervisor options --feature-flag=x=true
+== supervisor options --channel beta --hostname h --timezone UTC --logging info --detect-blocking-io off --debug=true --debug-block=true --diagnostics=true --auto-update=false --feature-flag f=true
+== supervisor options --channel beta --raw-json
+== supervisor options flags error
+args: supervisor options --channel beta
+response: error:400:Invalid channel
+== supervisor options feature flag error
+args: supervisor options --feature-flag nope=true
+response: error:400:Unknown feature flag
+== __complete supervisor options --hostname ""
+== __complete supervisor options --channel ""
+== __complete supervisor options --channel=
+== __complete supervisor options --channel b
+== __complete supervisor options -c ""
+== __complete supervisor options --detect-blocking-io ""
+== __complete supervisor options --detect-blocking-io=on
+== __complete supervisor options --timezone ""
+== __complete supervisor options -t ""
+== __complete supervisor options --logging ""
+== __complete supervisor options -l ""
+== __complete supervisor options --logging=w
+== __complete supervisor options --debug ""
+== __complete supervisor options --debug=
+== __complete supervisor options --debug-block=
+== __complete supervisor options --diagnostics=
+== __complete supervisor options --diagnostics=t
+== __complete supervisor options --auto-update=
+== __complete supervisor options --auto-update ""
+== __complete supervisor options --feat
+== __complete supervisor options --channel beta -
+== __complete supervisor options --feature-flag ""
+route: GET /supervisor/info = data:{"feature_flags":{"supervisor_v2_api":false}}
+== __complete supervisor options --feature-flag= (true flag)
+args: __complete supervisor options --feature-flag=
+route: GET /supervisor/info = data:{"feature_flags":{"supervisor_v2_api":true}}
+== __complete supervisor options --feature-flag (non bool skipped)
+args: __complete supervisor options --feature-flag ""
+route: GET /supervisor/info = data:{"feature_flags":{"a":"x","b":1,"c":null,"d":true}}
+== __complete supervisor options --feature-flag s (prefix)
+args: __complete supervisor options --feature-flag s
+route: GET /supervisor/info = data:{"feature_flags":{"supervisor_v2_api":false}}
+== __complete supervisor options --feature-flag x (no match)
+args: __complete supervisor options --feature-flag x
+route: GET /supervisor/info = data:{"feature_flags":{"supervisor_v2_api":false}}
+== __complete supervisor options --feature-flag (no flags key)
+args: __complete supervisor options --feature-flag ""
+route: GET /supervisor/info = data:{"version":"1"}
+== __complete supervisor options --feature-flag (null flags)
+args: __complete supervisor options --feature-flag ""
+route: GET /supervisor/info = data:{"feature_flags":null}
+== __complete supervisor options --feature-flag (flags is list)
+args: __complete supervisor options --feature-flag ""
+route: GET /supervisor/info = data:{"feature_flags":[true]}
+== __complete supervisor options --feature-flag (empty flags)
+args: __complete supervisor options --feature-flag ""
+route: GET /supervisor/info = data:{"feature_flags":{}}
+== __complete supervisor options --feature-flag (api error)
+args: __complete supervisor options --feature-flag ""
+response: error
+== __complete supervisor options --feature-flag (500 text)
+args: __complete supervisor options --feature-flag ""
+response: text:500
+== __complete supervisor options --feature-flag (connection refused)
+args: __complete supervisor options --endpoint 127.0.0.1:1 --feature-flag ""
+== __complete supervisor options --feature-flag (second use)
+args: __complete supervisor options --feature-flag a=true --feature-flag ""
+route: GET /supervisor/info = data:{"feature_flags":{"supervisor_v2_api":false}}
+== __completeNoDesc supervisor options --feature-flag ""
+route: GET /supervisor/info = data:{"feature_flags":{"supervisor_v2_api":false}}

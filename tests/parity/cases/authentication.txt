@@ -1,0 +1,168 @@
+# Parity cases for `ha authentication`.
+
+== authentication
+== authentication --help
+== authentication bogus
+== auth
+== au --help
+== authentication cache --help
+== authentication list --help
+== authentication reset --help
+== help auth reset
+
+# --- cache ---
+== authentication cache
+== auth data
+== au ca
+== authentication cache data
+args: authentication cache
+response: data:{"a":1}
+== authentication cache extra
+== authentication cache --bogus
+== authentication cache --raw-json
+== authentication cache error
+args: authentication cache
+response: error
+== authentication cache 403 text
+args: authentication cache
+response: text:403
+== authentication cache 502
+args: authentication cache
+response: text:502
+== authentication cache connection refused
+args: authentication cache --endpoint 127.0.0.1:1
+== authentication cache bad endpoint
+args: authentication cache --endpoint "bad host"
+
+# --- list ---
+== authentication list
+response: data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false,"group_ids":["system-admin"]},{"username":"jane","name":"Jane","is_owner":false,"is_active":false,"local_only":true,"group_ids":[]}]}
+== auth ls
+response: data:{"users":[]}
+== authentication list empty
+args: authentication list
+== authentication list --raw-json
+response: data:{"users":[]}
+== authentication list extra
+== authentication list error
+args: authentication list
+response: error:400:Not allowed
+== authentication list 403 text
+args: authentication list
+response: text:403
+== authentication list 401 text
+args: authentication list
+response: text:401
+== authentication list 403 json
+args: authentication list
+response: error:403:Forbidden
+== authentication list 403 text raw json
+args: authentication list --raw-json
+response: text:403
+== authentication list connection refused
+args: authentication list --endpoint 127.0.0.1:1
+
+# --- reset (non interactive) ---
+== authentication reset
+== authentication reset --username john
+== authentication reset --password secret
+== authentication reset --username john --password secret
+== auth rst --username=john --password=secret
+== au change --username "John Doe" --password "123SuperSecret!"
+== authentication reset --username "" --password ""
+== authentication reset --username john --password ""
+== authentication reset --username "" --password secret
+== authentication reset --interactive=false
+== authentication reset --interactive=false --username john
+== authentication reset --interactive=false --username john --password secret
+== authentication reset --username john --password secret extra
+== authentication reset --username
+== authentication reset --bogus
+== authentication reset error
+args: authentication reset --username john --password secret
+response: error:400:Username 'john' does not exist
+== authentication reset 403 text
+args: authentication reset --username john --password secret
+response: text:403
+== authentication reset 500 text
+args: authentication reset --username john --password secret
+response: text:500
+== authentication reset connection refused
+args: authentication reset --username john --password secret --endpoint 127.0.0.1:1
+== authentication reset --username john --password secret --raw-json
+== authentication reset data
+args: authentication reset --username john --password secret
+response: data:{"a":1}
+
+# --- reset (interactive; stdin is not a terminal, so the password prompt fails) ---
+== authentication reset --interactive --username john
+== authentication reset --interactive --username john --password secret
+stdin: secret\nsecret\n
+== authentication reset --interactive --username ""
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false}]}
+stdin: 1\n
+== authentication reset --interactive
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false},{"username":"jane","name":"Jane","is_owner":false,"is_active":false,"local_only":true}]}
+stdin: 2\nsecret\nsecret\n
+== authentication reset --interactive --password ignored
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false},{"username":"jane","name":"Jane","is_owner":false,"is_active":false,"local_only":true}]}
+stdin: 1\n
+== reset interactive no stdin
+args: authentication reset --interactive
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false}]}
+== reset interactive no newline
+args: authentication reset --interactive
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false}]}
+stdin: 1
+== reset interactive invalid then valid
+args: authentication reset --interactive
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false},{"username":"jane","name":"Jane","is_owner":false,"is_active":false,"local_only":true}]}
+stdin: 0\nx\n 2 \n
+== reset interactive out of range
+args: authentication reset --interactive
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false}]}
+stdin: 2\n3\n-1\n1\n
+== reset interactive empty lines
+args: authentication reset --interactive
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false}]}
+stdin: \n\n\n1\n
+== reset interactive empty then valid
+args: authentication reset --interactive
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false}]}
+stdin: \n+1\n
+== reset interactive no users
+args: authentication reset --interactive
+route: GET /auth/list = data:{"users":[]}
+stdin: 1\n
+== reset interactive list error
+args: authentication reset --interactive
+route: GET /auth/list = error:400:Not allowed here
+== reset interactive list result error with 200
+args: authentication reset --interactive
+route: GET /auth/list = json:{"result":"error","message":"odd"}
+== reset interactive list 403 text
+args: authentication reset --interactive
+route: GET /auth/list = text:403
+== reset interactive list 403 json
+args: authentication reset --interactive
+route: GET /auth/list = error:403:Forbidden for you
+== reset interactive list raw json
+args: authentication reset --interactive --raw-json
+route: GET /auth/list = data:{"users":[{"username":"john","name":"John Doe","is_owner":true,"is_active":true,"local_only":false}]}
+stdin: 1\n
+== reset interactive connection refused
+args: authentication reset --interactive --endpoint 127.0.0.1:1
+== authentication reset --interactive extra
+
+# --- completion ---
+== __complete authentication ""
+== __complete auth r
+== __complete authentication cache ""
+== __complete authentication list ""
+== __complete authentication reset ""
+== __complete authentication reset -
+== __complete authentication reset --username ""
+== __complete authentication reset --password ""
+== __complete authentication reset --interactive=
+== __complete authentication reset --username john -
+== __complete authentication reset --interactive -

@@ -1,0 +1,105 @@
+# Parity cases for `ha cli`. Format: see tests/parity.py.
+
+# --- help / tree ---
+== cli
+== cli --help
+== cli bogus
+== help cli
+== cli info --help
+== cli stats --help
+== cli update --help
+== __complete cli ""
+== __completeNoDesc cli ""
+# --- info ---
+== cli info
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== cli in
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== cli inf
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== cli info (empty data)
+args: cli info
+== cli info --raw-json
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== cli info extra
+== cli info --bogus
+== cli info api error
+args: cli info
+response: error:400:Something failed
+== cli info api error raw json
+args: cli info --raw-json
+response: error
+== cli info 500 text
+args: cli info
+response: text:500
+== cli info connection refused
+args: cli info --endpoint 127.0.0.1:1
+== __complete cli info ""
+== __complete cli info -
+# --- stats ---
+== cli stats
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== cli status
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== cli stat
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== cli stats (empty data)
+args: cli stats
+== cli stats --raw-json
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== cli stats extra
+== cli stats --bogus
+== cli stats api error
+args: cli stats
+response: error:400:Something failed
+== cli stats api error raw json
+args: cli stats --raw-json
+response: error
+== cli stats 500 text
+args: cli stats
+response: text:500
+== cli stats connection refused
+args: cli stats --endpoint 127.0.0.1:1
+== __complete cli stats ""
+== __complete cli stats -
+# --- update ---
+== cli update
+== cli upgrade
+== cli downgrade
+== cli up
+== cli down
+== cli update data response
+args: cli update
+response: data:{"job_id":"abc"}
+== cli update --raw-json
+== cli update --no-progress
+== cli update extra
+== cli update --bogus
+== cli update api error
+args: cli update
+response: error:400:Something failed
+== cli update api error raw json
+args: cli update --raw-json
+response: error
+== cli update 502
+args: cli update
+response: text:502
+== cli update connection refused
+args: cli update --endpoint 127.0.0.1:1
+== __complete cli update ""
+== __complete cli update -
+== cli update --version 2025.08.0
+== cli upgrade --version=5
+== cli downgrade --version ""
+== cli down --version
+== cli update --version 1 --version 2
+== cli update version error
+args: cli update --version 1
+response: error:400:Version 1 not found
+== cli update --raw-json --version 3
+response: data:{"a":1}
+== __complete cli update --version ""
+== __complete cli update --ver
+== cli logs
+== cli restart
+== cli st

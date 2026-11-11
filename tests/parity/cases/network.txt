@@ -1,0 +1,221 @@
+# Parity cases for `ha network`. Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== network
+== net
+== network --help
+== network bogus
+== network info --help
+== network reload --help
+== network scan --help
+== network update --help
+== network vlan --help
+== help network update
+
+# --- info -------------------------------------------------------------------
+== network info
+response: data:{"interfaces":[{"interface":"eth0","type":"ethernet","enabled":true,"connected":true,"primary":true,"ipv4":{"method":"auto","address":["192.168.1.5/24"],"gateway":"192.168.1.1","nameservers":["192.168.1.1"]},"ipv6":{"method":"disabled","address":[],"gateway":null,"nameservers":[]},"wifi":null,"vlan":null}],"docker":{"interface":"hassio","address":"172.30.32.0/23","gateway":"172.30.32.1","dns":"172.30.32.3"},"host_internet":true,"supervisor_internet":true}
+== net in
+response: data
+== network inf --raw-json
+response: data
+== network info eth0
+response: data:{"interface":"eth0","type":"ethernet","enabled":true}
+== network info "we ird/if?x=1"
+== network info ""
+== network info eth0 --raw-json
+response: data
+== network info a b
+== network info --bogus
+== network info api error
+args: network info
+response: error
+== network info interface api error
+args: network info wlan9
+response: error:400:Interface wlan9 does not exist
+== network info api error raw json
+args: network info --raw-json
+response: error:500:Internal problem
+== network info connection refused
+args: network info --endpoint 127.0.0.1:1
+
+# --- reload -----------------------------------------------------------------
+== network reload
+== network re
+== net reload --raw-json
+== network reload extra
+== network reload api error
+args: network reload
+response: error
+
+# --- scan -------------------------------------------------------------------
+== network scan wlan0
+response: data:{"accesspoints":[{"mode":"infrastructure","ssid":"Home","frequency":2437,"signal":80,"mac":"00:11:22:33:44:55"}]}
+== network accesspoints wlan0
+== network wifi wlan0 --raw-json
+response: data
+== network scan wlan0 --no-progress
+== network scan "we ird/if"
+== network scan
+== network scan a b
+== network scan wlan0 --bogus
+== network scan api error
+args: network scan eth0
+response: error:400:Only supported on wireless interfaces
+== network scan connection refused
+args: network scan wlan0 --endpoint 127.0.0.1:1
+
+# --- update -----------------------------------------------------------------
+== network update eth0
+== network set eth0
+== network up eth0 --raw-json
+== network update eth0 --ipv4-method auto --ipv6-method disabled
+== network update eth0 --ipv4-method static --ipv4-address 192.168.1.5/24 --ipv4-gateway 192.168.1.1 --ipv4-nameserver 1.1.1.1 --ipv4-nameserver 8.8.8.8
+== network update eth0 --ipv4-address 192.168.1.5/24 --ipv4-address 10.0.0.2/8
+== network update eth0 --ipv4-route-metric 100
+== network update eth0 --ipv4-route-metric 0
+== network update eth0 --ipv4-route-metric -1
+== network update eth0 --ipv4-route-metric=-5 --ipv6-route-metric 1024
+== network update eth0 --ipv4-route-metric x
+== network update eth0 --ipv6-method static --ipv6-address 2001:db8::5/64 --ipv6-gateway 2001:db8::1 --ipv6-nameserver 2001:4860:4860::8888
+== network update eth0 --ipv6-addr-gen-mode stable-privacy --ipv6-privacy enabled
+== network update eth0 --ipv6-addr-gen-mode eui64
+== network update eth0 --ipv6-privacy default
+== network update eth0 --ipv6-route-metric 0
+== network update eth0 --ipv4-method "" --ipv4-gateway ""
+== network update eth0 --ipv4-address ""
+== network update eth0 --ipv4-nameserver "" --ipv6-nameserver ""
+== network update eth0 --ipv4-addr-gen-mode eui64
+== network update eth0 --ipv4-privacy enabled
+== network update eth0 --ipv4-nameservers 1.1.1.1
+== network update wlan0 --wifi-mode infrastructure --wifi-ssid Home --wifi-auth wpa-psk --wifi-psk "sec ret"
+== network update wlan0 --wifi-ssid "My \"Net\" <&>"
+== network update wlan0 --wifi-auth open --wifi-mode ap
+== network update wlan0 --wifi-psk ""
+== network update eth0 --disabled
+== network update eth0 -e
+== network update eth0 --disabled=true
+== network update eth0 --disabled=false
+== network update eth0 --disabled false
+== network update eth0 --disabled=maybe
+== network update eth0 --mdns announce --llmnr off
+== network update eth0 --mdns default
+== network update eth0 --llmnr resolve
+== network update eth0 --mdns "" --llmnr ""
+== network update everything
+args: network update eth0 --ipv4-method static --ipv4-address 192.168.1.5/24 --ipv4-gateway 192.168.1.1 --ipv4-nameserver 1.1.1.1 --ipv4-route-metric 10 --ipv6-method auto --ipv6-address 2001:db8::5/64 --ipv6-gateway 2001:db8::1 --ipv6-nameserver 2001:db8::53 --ipv6-addr-gen-mode default --ipv6-privacy disabled --ipv6-route-metric 20 --wifi-mode mesh --wifi-ssid s --wifi-auth wep --wifi-psk k --mdns resolve --llmnr announce -e
+== network update "we ird/if" --ipv4-method auto
+== network update
+== network update a b
+== network update eth0 --ipv4-method
+== network update eth0 --bogus
+== network update api error
+args: network update eth0 --ipv4-method static
+response: error:400:Missing address
+== network update api error raw json
+args: network update eth0 --raw-json
+response: error
+== network update data response
+args: network update eth0 --ipv4-method auto
+response: data:{"a":1}
+== network update connection refused
+args: network update eth0 --endpoint 127.0.0.1:1
+
+# --- vlan -------------------------------------------------------------------
+== network vlan eth0 10
+== network vlan eth0 10 --raw-json
+== network vlan eth0 10 --ipv4-method auto --ipv6-method disabled
+== network vlan eth0 10 --ipv4-method static --ipv4-address 192.168.10.5/24 --ipv4-gateway 192.168.10.1 --ipv4-nameserver 1.1.1.1 --ipv4-nameserver 8.8.8.8
+== network vlan eth0 10 --ipv4-route-metric 100
+== network vlan eth0 10 --ipv4-route-metric -1 --ipv6-route-metric 0
+== network vlan eth0 10 --ipv6-method static --ipv6-address 2001:db8::5/64 --ipv6-gateway 2001:db8::1 --ipv6-nameserver 2001:db8::53
+== network vlan eth0 10 --ipv6-addr-gen-mode default-or-eui64 --ipv6-privacy enabled-prefer-public
+== network vlan eth0 10 --ipv4-method "" --ipv6-address ""
+== network vlan eth0 10 --mdns off --llmnr default
+== network vlan eth0 10 --mdns ""
+== network vlan eth0 10 --disabled
+== network vlan eth0 10 --wifi-ssid x
+== network vlan eth0 abc
+== network vlan "we ird/if" "1 0"
+== network vlan
+== network vlan eth0
+== network vlan eth0 10 20
+== network vlan eth0 10 --ipv4-route-metric x
+== network vlan eth0 10 --bogus
+== network vlan api error
+args: network vlan wlan0 10
+response: error:400:Only supported on ethernet interfaces
+== network vlan data response
+args: network vlan eth0 10 --mdns off
+response: data:{"a":1}
+
+# --- completion -------------------------------------------------------------
+== __complete network ""
+== __complete network u
+== __complete network reload ""
+== __complete network info ""
+route: GET /network/info = file:network_info.json
+== __complete network info e
+route: GET /network/info = file:network_info.json
+== __complete network info eth0 ""
+route: GET /network/info = file:network_info.json
+== __complete network info (api error)
+args: __complete network info ""
+response: error
+== __complete network info (not a list)
+args: __complete network info ""
+response: data:{"interfaces":{"a":1}}
+== __complete network scan ""
+route: GET /network/info = file:network_info.json
+== __complete network accesspoints ""
+route: GET /network/info = file:network_info.json
+== __complete network scan wlan0 ""
+route: GET /network/info = file:network_info.json
+== __complete network update ""
+route: GET /network/info = file:network_info.json
+== __complete network set ""
+route: GET /network/info = file:network_info.json
+== __complete network vlan ""
+route: GET /network/info = file:network_info.json
+== __complete network vlan eth0 ""
+route: GET /network/info = file:network_info.json
+== __complete network update -
+== __complete network update eth0 --ipv4-
+== __complete network update eth0 --ipv4-address ""
+== __complete network update eth0 --ipv4-gateway ""
+== __complete network update eth0 --ipv4-method ""
+== __complete network update eth0 --ipv4-method=s
+== __complete network update eth0 --ipv4-nameserver ""
+== __complete network update eth0 --ipv4-route-metric ""
+== __complete network update eth0 --ipv6-address ""
+== __complete network update eth0 --ipv6-gateway ""
+== __complete network update eth0 --ipv6-method ""
+== __complete network update eth0 --ipv6-addr-gen-mode ""
+== __complete network update eth0 --ipv6-privacy ""
+== __complete network update eth0 --ipv6-nameserver ""
+== __complete network update eth0 --ipv6-route-metric ""
+== __complete network update eth0 --wifi-mode ""
+== __complete network update eth0 --wifi-ssid ""
+== __complete network update eth0 --wifi-auth ""
+== __complete network update eth0 --wifi-psk ""
+== __complete network update eth0 --disabled=
+== __complete network update eth0 -e ""
+route: GET /network/info = file:network_info.json
+== __complete network update eth0 --mdns ""
+== __complete network update eth0 --llmnr ""
+== __complete network vlan -
+== __complete network vlan eth0 10 --ipv4-address ""
+== __complete network vlan eth0 10 --ipv4-gateway ""
+== __complete network vlan eth0 10 --ipv4-method ""
+== __complete network vlan eth0 10 --ipv4-nameserver ""
+== __complete network vlan eth0 10 --ipv4-route-metric ""
+== __complete network vlan eth0 10 --ipv6-address ""
+== __complete network vlan eth0 10 --ipv6-gateway ""
+== __complete network vlan eth0 10 --ipv6-method ""
+== __complete network vlan eth0 10 --ipv6-addr-gen-mode ""
+== __complete network vlan eth0 10 --ipv6-privacy ""
+== __complete network vlan eth0 10 --ipv6-nameserver ""
+== __complete network vlan eth0 10 --ipv6-route-metric ""
+== __complete network vlan eth0 10 --mdns ""
+== __complete network vlan eth0 10 --llmnr ""
+== __completeNoDesc network ""

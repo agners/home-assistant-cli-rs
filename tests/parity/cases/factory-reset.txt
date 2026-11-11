@@ -1,0 +1,60 @@
+# Parity cases for `ha factory-reset` (runs `ha os datadisk wipe`).
+== factory-reset --help
+== help factory-reset
+== factory-reset (confirm)
+args: factory-reset
+stdin: YES\n
+== factory-reset (lower-case)
+args: factory-reset
+stdin:   yes \n
+== factory-reset (mixed case)
+args: factory-reset
+stdin: yEs\n
+== factory-reset (declined)
+args: factory-reset
+stdin: no\n
+== factory-reset (nope)
+args: factory-reset
+stdin: Nope\nyes\n
+== factory-reset (retry then yes)
+args: factory-reset
+stdin: yess\nYES\n
+== factory-reset (two wrong answers)
+args: factory-reset
+stdin: y\n\nYES\n
+== factory-reset (eof)
+args: factory-reset
+== factory-reset (eof without newline)
+args: factory-reset
+stdin: YES
+== factory-reset (eof after retry)
+args: factory-reset
+stdin: what\n
+== factory-reset (api error)
+args: factory-reset
+response: error:400:Not allowed
+stdin: YES\n
+== factory-reset (403 text)
+args: factory-reset
+response: text:403
+stdin: YES\n
+== factory-reset (data response)
+args: factory-reset
+response: data:{"a":1}
+stdin: YES\n
+== factory-reset --raw-json
+stdin: YES\n
+== factory-reset --raw-json error
+args: factory-reset --raw-json
+response: error
+stdin: YES\n
+== factory-reset connection refused
+args: factory-reset --endpoint 127.0.0.1:1
+stdin: YES\n
+== factory-reset extra
+stdin: YES\n
+== factory-reset --bogus
+stdin: YES\n
+== __complete factory-reset ""
+== __complete factory-reset -
+== __complete factory

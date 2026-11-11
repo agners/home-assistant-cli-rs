@@ -1,0 +1,23 @@
+# Parity cases for `ha refresh-updates`.
+== refresh-updates
+== refresh
+response: data
+== refresh_updates --raw-json
+response: data:{"a":1}
+== refresh-updates --help
+== help refresh-updates
+== refresh-updates extra
+== refresh-updates --bogus
+== refresh-updates error
+args: refresh-updates
+response: error:400:Store reload failed
+== refresh-updates 403 text
+args: refresh-updates
+response: text:403
+== refresh-updates connection refused
+args: refresh-updates --endpoint 127.0.0.1:1
+== refresh-updates endpoint with path
+args: refresh-updates --endpoint http://{endpoint}/api/
+== __complete refresh-updates ""
+== __complete refresh -
+== __complete refresh

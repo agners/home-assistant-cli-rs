@@ -1,0 +1,265 @@
+# Parity cases for `ha docker`. Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== docker
+== do
+== docker --help
+== docker bogus
+== docker info --help
+== docker migrate-storage-driver --help
+== docker options --help
+== docker registries --help
+== docker registries add --help
+== docker registries delete --help
+== docker reset-storage --help
+== help docker registries add
+
+# --- info -------------------------------------------------------------------
+== docker info
+response: data:{"version":"28.0.4","enable_ipv6":null,"mtu":null,"storage":"overlay2","logging":"journald","registries":{}}
+== do in
+response: data
+== docker inf --raw-json
+response: data
+== docker info extra
+== docker info --bogus
+== docker info api error
+args: docker info
+response: error
+== docker info api error raw json
+args: docker info --raw-json
+response: error:500:Internal problem
+== docker info connection refused
+args: docker info --endpoint 127.0.0.1:1
+
+# --- options ----------------------------------------------------------------
+== docker options
+== docker options --enable-ipv6
+== docker option --enable-ipv6=true
+== docker opt --enable-ipv6=false
+== docker opts --enable_ipv6
+== docker op --enable_ipv6=false
+== docker options --enable-ipv6 false
+== docker options --enable-ipv6=maybe
+== docker options --mtu 1450
+== docker options --mtu=1450 --enable-ipv6
+== docker options --mtu 0
+== docker options --mtu 68
+== docker options --mtu 65535
+== docker options --mtu 67
+== docker options --mtu 65536
+== docker options --mtu -1
+== docker options --mtu=-5 --enable-ipv6
+== docker options --mtu x
+== docker options --mtu 1.5
+== docker options --mtu
+== docker options --mtu 0x100
+== docker options extra
+== docker options --raw-json
+== docker options --mtu 1500 --raw-json
+== docker options --enable-ipv6 --raw-json
+response: data:{"a":1}
+== docker options data response
+args: docker options --mtu 1500
+response: data:{"a":1}
+== docker options api error
+args: docker options --mtu 1500
+response: error:400:Invalid MTU
+== docker options api error raw json
+args: docker options --enable-ipv6 --raw-json
+response: error
+== docker options no flags api error
+args: docker options
+response: error
+== docker options connection refused
+args: docker options --mtu 1500 --endpoint 127.0.0.1:1
+
+# --- registries -------------------------------------------------------------
+== docker registries
+response: data:{"registries":{"my-docker.example.com":{"username":"test"}}}
+== docker reg
+== docker re --raw-json
+response: data
+== docker registries extra
+== docker registries extra more
+response: data
+== docker registries --bogus
+== docker registries api error
+args: docker registries
+response: error
+== docker registries add my-docker.example.com --username test --password example
+== docker registries set host.example -u test -p example
+== docker reg new host.example -utest -p=example
+== docker registries add host.example
+== docker registries add host.example --username test
+== docker registries add host.example --password secret
+== docker registries add host.example --username "" --password ""
+== docker registries add "we ird/host" -u "a\"b" -p "c<d>&e"
+== docker registries add host.example -u a --raw-json
+== docker registries add
+== docker registries add a b
+== docker registries add host.example --username
+== docker registries add host.example --bogus
+== docker registries add api error
+args: docker registries add host.example -u a -p b
+response: error:400:Invalid registry
+== docker registries add data response
+args: docker registries add host.example -u a -p b
+response: data:{"a":1}
+== docker registries delete my-docker.example.com
+== docker registries del host.example
+== docker re remove host.example --raw-json
+== docker registries delete "we ird/host?x=1"
+== docker registries delete
+== docker registries delete a b
+== docker registries delete host.example --bogus
+== docker registries delete api error
+args: docker registries delete host.example
+response: error:400:Hostname host.example does not exist in registries
+== docker registries delete 404 text
+args: docker registries delete host.example
+response: text:404
+== docker registries delete connection refused
+args: docker registries delete host.example --endpoint 127.0.0.1:1
+
+# --- migrate-storage-driver -------------------------------------------------
+== docker migrate-storage-driver (YES)
+args: docker migrate-storage-driver
+stdin: YES\n
+== docker migrate-storage-driver (yes)
+args: docker migrate-storage-driver
+stdin: yes\n
+== docker migrate-storage-driver overlayfs
+stdin:   Yes  \n
+== docker migrate-storage-driver overlay2
+stdin: YES\n
+== docker migrate-storage-driver "a \"b\""
+stdin: YES\n
+== docker migrate-storage-driver (no stdin)
+args: docker migrate-storage-driver
+== docker migrate-storage-driver (eof without newline)
+args: docker migrate-storage-driver
+stdin: YES
+== docker migrate-storage-driver (no)
+args: docker migrate-storage-driver
+stdin: no\n
+== docker migrate-storage-driver (N)
+args: docker migrate-storage-driver
+stdin: N\nYES\n
+== docker migrate-storage-driver (retry then yes)
+args: docker migrate-storage-driver
+stdin: maybe\nYES\n
+== docker migrate-storage-driver (empty then yes)
+args: docker migrate-storage-driver
+stdin: \nyes\n
+== docker migrate-storage-driver (two wrong answers)
+args: docker migrate-storage-driver
+stdin: maybe\ny\nYES\n
+== docker migrate-storage-driver (one wrong answer then eof)
+args: docker migrate-storage-driver
+stdin: y\n
+== docker migrate-storage-driver (raw json)
+args: docker migrate-storage-driver --raw-json
+stdin: YES\n
+== docker migrate-storage-driver (raw json declined)
+args: docker migrate-storage-driver --raw-json
+stdin: n\n
+== docker migrate-storage-driver (data response)
+args: docker migrate-storage-driver
+stdin: YES\n
+response: data:{"a":1}
+== docker migrate-storage-driver (api error)
+args: docker migrate-storage-driver
+stdin: YES\n
+response: error:400:Unsupported storage driver
+== docker migrate-storage-driver (api error raw json)
+args: docker migrate-storage-driver --raw-json
+stdin: YES\n
+response: error
+== docker migrate-storage-driver (connection refused)
+args: docker migrate-storage-driver --endpoint 127.0.0.1:1
+stdin: YES\n
+== docker migrate-storage-driver a b
+stdin: YES\n
+== docker migrate-storage-driver --bogus
+stdin: YES\n
+
+# --- reset-storage ----------------------------------------------------------
+== docker reset-storage (YES)
+args: docker reset-storage
+stdin: YES\n
+== docker reset-storage (yes)
+args: docker reset-storage
+stdin: yes\n
+== docker reset-storage (no stdin)
+args: docker reset-storage
+== docker reset-storage (no)
+args: docker reset-storage
+stdin: no\n
+== docker reset-storage (retry then yes)
+args: docker reset-storage
+stdin: what\nYES\n
+== docker reset-storage (two wrong answers)
+args: docker reset-storage
+stdin: a\nb\nYES\n
+== docker reset-storage (raw json)
+args: docker reset-storage --raw-json
+stdin: YES\n
+== docker reset-storage (data response)
+args: docker reset-storage
+stdin: YES\n
+response: data:{"a":1}
+== docker reset-storage (api error)
+args: docker reset-storage
+stdin: YES\n
+response: error:400:Not possible
+== docker reset-storage (api error raw json)
+args: docker reset-storage --raw-json
+stdin: YES\n
+response: error
+== docker reset-storage extra
+stdin: YES\n
+== docker reset-storage --bogus
+stdin: YES\n
+
+# --- completion -------------------------------------------------------------
+== __complete docker ""
+== __complete docker r
+== __complete docker info ""
+== __complete docker options ""
+== __complete docker options -
+== __complete docker options --enable-ipv6=
+== __complete docker options --enable-ipv6 ""
+== __complete docker options --enable_ipv6=
+== __complete docker options --enable_
+== __complete docker options --mtu ""
+== __complete docker options --mtu 1500 -
+== __complete docker migrate-storage-driver ""
+== __complete docker migrate-storage-driver o
+== __complete docker migrate-storage-driver overlayfs ""
+== __complete docker migrate-storage-driver -
+== __complete docker reset-storage ""
+== __complete docker registries ""
+== __complete docker registries a
+== __complete docker registries -
+== __complete docker registries add ""
+== __complete docker registries add host ""
+== __complete docker registries add -
+== __complete docker registries add host --username ""
+== __complete docker registries add host -p ""
+== __complete docker registries delete ""
+response: data:{"registries":{"my-docker.example.com":{"username":"test"}}}
+== __complete docker registries delete m
+response: data:{"registries":{"my-docker.example.com":{}}}
+== __complete docker registries delete (no registries)
+args: __complete docker registries delete ""
+response: data:{"registries":{}}
+== __complete docker registries delete (not a map)
+args: __complete docker registries delete ""
+response: data:{"registries":["a"]}
+== __complete docker registries delete (api error)
+args: __complete docker registries delete ""
+response: error
+== __complete docker registries delete host ""
+response: data:{"registries":{"my-docker.example.com":{}}}
+== __completeNoDesc docker ""

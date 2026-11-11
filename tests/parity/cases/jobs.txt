@@ -1,0 +1,70 @@
+# Parity cases for `ha jobs`.
+
+== jobs
+== jobs --help
+== jobs bogus
+== job
+== tasks info
+response: data
+== task info
+== jobs info --help
+== jobs options --help
+== jobs reset --help
+== help jobs options
+
+# --- info ---
+== jobs info
+response: data:{"ignore_conditions":["healthy"],"jobs":[{"name":"backup_manager_full_backup","reference":"abc","uuid":"1234","progress":42.5,"stage":"addons","done":false,"child_jobs":[],"errors":[]}]}
+== jobs in
+response: data
+== jobs inf
+== jobs info --raw-json
+response: data
+== jobs info extra
+== jobs info --bogus
+== jobs info api error
+args: jobs info
+response: error
+== jobs info 500 text
+args: jobs info
+response: text:500
+== jobs info connection refused
+args: jobs info --endpoint 127.0.0.1:1
+
+# --- options ---
+== jobs options
+== jobs options --ignore-conditions healthy
+== jobs option -i healthy -i free_space
+== jobs opt -ihealthy --ignore-conditions=internet_host
+== jobs opts --ignore-conditions ""
+== jobs op -i a
+== jobs options --ignore-conditions
+== jobs options extra
+== jobs options api error
+args: jobs options -i bogus
+response: error:400:Invalid condition
+== jobs options -i healthy --raw-json
+response: data:{"a":1}
+
+# --- reset ---
+== jobs reset
+== jobs reset --no-progress
+== jobs reset extra
+== jobs reset error
+args: jobs reset
+response: error
+== jobs reset --raw-json
+== jobs reset data
+args: jobs reset
+response: data:{"job_id":"abc"}
+
+# --- completion ---
+== __complete jobs ""
+== __complete jobs o
+== __complete jobs info ""
+== __complete jobs options ""
+== __complete jobs options -
+== __complete jobs options --ignore-conditions ""
+== __complete jobs options -i ""
+== __complete jobs reset ""
+== __complete job ""

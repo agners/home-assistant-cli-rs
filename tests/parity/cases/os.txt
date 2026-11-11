@@ -1,0 +1,547 @@
+# Parity cases for `ha os`. Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== os
+== os --help
+== hassos
+== os bogus
+== help os
+== os info --help
+== os update --help
+== os import --help
+== os boot-slot --help
+== os boards
+== os boards --help
+== os boards bogus
+== os boards green --help
+== os boards green options --help
+== os boards yellow --help
+== os boards yellow options --help
+== os boards raspberrypi
+== os boards rpi --help
+== os boards raspberrypi firmware --help
+== os boards raspberrypi firmware update --help
+== os config
+== os conf --help
+== os cfg swap
+== os config sw --help
+== os config swap info --help
+== os config swap options --help
+== os datadisk
+== os data --help
+== os datadisk list --help
+== os datadisk move --help
+== os datadisk wipe --help
+
+# --- info -------------------------------------------------------------------
+== os info
+response: data:{"version":"16.3","version_latest":"16.3","update_available":false,"board":"generic-x86-64","boot":"A","data_disk":"Samsung-SSD","boot_slots":{"A":{"state":"booted","status":"good","version":"16.3"},"B":{"state":"inactive","status":"good","version":"16.2"}}}
+== os in
+response: data
+== os inf --raw-json
+response: data
+== hassos info
+response: data
+== hassos info --raw-json
+response: data
+== os info (empty data)
+args: os info
+== os info extra
+== os info --bogus
+== os info api error
+args: os info
+response: error
+== os info 500 text
+args: os info
+response: text:500
+== os info connection refused
+args: os info --endpoint 127.0.0.1:1
+
+# --- update -----------------------------------------------------------------
+== os update
+== os update --version 16.3
+== os upgrade --version=5
+== os downgrade --version ""
+== os up
+== os down --version
+== os update data response
+args: os update
+response: data:{"job_id":"abc"}
+== os update error
+args: os update --version 1
+response: error:400:Version 1 not found
+== os update --raw-json --version 3
+response: data:{"a":1}
+== os update --raw-json error
+args: os update --raw-json
+response: error
+== os update 502
+args: os update
+response: text:502
+== os update extra
+== os update --no-progress
+== hassos update --version 2
+
+# --- import -----------------------------------------------------------------
+== os import
+== os im
+== os sync
+== os load --raw-json
+== os import error
+args: os import
+response: error:400:No USB stick
+== os import extra
+
+# --- boot-slot --------------------------------------------------------------
+== os boot-slot
+== os boot-slot A B
+== os boot-slot A
+== os boot B
+== os boot-slot ""
+== os boot-slot A error
+args: os boot-slot A
+response: error:400:Invalid slot
+== os boot-slot A --raw-json
+== os boot-slot other
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"booted","status":"good","version":"16.3"},"B":{"state":"inactive","status":"good","version":"16.2"}}}
+== os boot-slot other (first slot inactive)
+args: os boot-slot other
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"inactive"},"B":{"state":"active"}}}
+== os boot-slot other (no inactive slot)
+args: os boot-slot other
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"booted"},"B":{"state":"active"}}}
+== os boot-slot other (odd slots)
+args: os boot-slot other
+route: GET /os/info = data:{"boot_slots":{"A":"x","B":{"state":1},"C":{"state":"inactive"}}}
+== os boot-slot other (empty slots)
+args: os boot-slot other
+route: GET /os/info = data:{"boot_slots":{}}
+== os boot-slot other (no slots)
+args: os boot-slot other
+route: GET /os/info = data:{"version":"16.3"}
+== os boot-slot other (slots not a map)
+args: os boot-slot other
+route: GET /os/info = data:{"boot_slots":["A"]}
+== os boot-slot other (slots null)
+args: os boot-slot other
+route: GET /os/info = data:{"boot_slots":null}
+== os boot-slot other (empty data)
+args: os boot-slot other
+== os boot-slot other (info error)
+args: os boot-slot other
+route: GET /os/info = error:400:Not on HAOS
+== os boot-slot other (info 500 text)
+args: os boot-slot other
+route: GET /os/info = text:500
+== os boot-slot other (info 404)
+args: os boot-slot other
+route: GET /os/info = error:404:Not found
+== os boot-slot other (post error)
+args: os boot-slot other
+route: GET /os/info = data:{"boot_slots":{"B":{"state":"inactive"}}}
+route: POST /os/boot-slot = error:400:Cannot switch
+== os boot-slot other --raw-json
+route: GET /os/info = data:{"boot_slots":{"B":{"state":"inactive"}}}
+== os boot-slot other connection refused
+args: os boot-slot other --endpoint 127.0.0.1:1
+# Only one slot may be in a state other than "active" here: the Go CLI offers
+# the first such slot in (random) map iteration order, the Rust port in sorted order.
+== __complete os boot-slot ""
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"active","status":"good","version":"16.3"},"B":{"state":"inactive","status":"good","version":"16.2"}}}
+== __complete os boot-slot o
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"active","status":"good","version":"16.3"},"B":{"state":"inactive","status":"","version":"16.2"}}}
+== __complete os boot-slot (no details)
+args: __complete os boot-slot ""
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"active"},"B":{"state":"inactive","version":"","status":3}}}
+== __complete os boot-slot (status only)
+args: __complete os boot-slot ""
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"active"},"B":{"state":"inactive","status":"bad"}}}
+== __complete os boot-slot (all active)
+args: __complete os boot-slot ""
+route: GET /os/info = data:{"boot_slots":{"A":{"state":"active"},"B":{"state":"active"}}}
+== __complete os boot-slot (odd slots)
+args: __complete os boot-slot ""
+route: GET /os/info = data:{"boot_slots":{"A":"x","B":{"state":1},"C":{"status":"good"}}}
+== __complete os boot-slot (no slots)
+args: __complete os boot-slot ""
+route: GET /os/info = data:{"version":"16.3"}
+== __complete os boot-slot (error)
+args: __complete os boot-slot ""
+route: GET /os/info = error
+== __complete os boot-slot A ""
+route: GET /os/info = data:{"boot_slots":{"B":{"state":"inactive"}}}
+== __complete os boot ""
+route: GET /os/info = data:{"boot_slots":{"B":{"state":"inactive","version":"16.2"}}}
+
+# --- boards green -----------------------------------------------------------
+== os boards green
+response: data:{"activity_led":true,"power_led":true,"system_health_led":false}
+== os boards grn
+== os boards green --raw-json
+response: data
+== os boards green error
+args: os boards green
+response: error:400:No Green board
+== os boards green extra
+== os boards green options
+== os boards green option --activity-led=false
+== os boards green opt --power-led
+== os boards green opts --system-health-led=false --activity-led=true
+== os boards grn op --activity-led --power-led=false --system-health-led
+== os boards green options --activity-led false
+== os boards green options --power-led=maybe
+== os boards green options --disk-led
+== os boards green options extra
+== os boards green options error
+args: os boards green options --power-led=false
+response: error:400:No Green board
+== os boards green options --raw-json --power-led
+response: data:{"a":1}
+== __complete os boards green ""
+== __complete os boards green options ""
+== __complete os boards green options -
+== __complete os boards green options --activity-led=
+== __complete os boards green options --power-led ""
+== __complete os boards green options --system-health-led=f
+
+# --- boards yellow ----------------------------------------------------------
+== os boards yellow
+response: data:{"disk_led":true,"heartbeat_led":true,"power_led":false}
+== os boards yell
+== os boards yellow --raw-json
+response: data
+== os boards yellow error
+args: os boards yellow
+response: error:400:No Yellow board
+== os boards yellow extra
+== os boards yellow options
+== os boards yellow options --raw-json
+== os boards yellow option --disk-led=false
+== os boards yellow opt --heartbeat-led
+== os boards yellow opts --power-led=false --disk-led=true
+== os boards yell op --disk-led --heartbeat-led=false --power-led
+== os boards yellow options --disk-led false
+== os boards yellow options --power-led=maybe
+== os boards yellow options --activity-led
+== os boards yellow options extra
+== os boards yellow options error
+args: os boards yellow options --power-led=false
+response: error:400:No Yellow board
+== os boards yellow options data response
+args: os boards yellow options --power-led=false
+response: data:{"a":1}
+== os boards yellow options --raw-json --power-led
+response: data:{"a":1}
+== os boards yellow options --raw-json error
+args: os boards yellow options --raw-json --power-led
+response: error
+== os boards yellow options unknown result
+args: os boards yellow options --power-led
+response: json:{"result":"weird"}
+== __complete os boards yellow ""
+== __complete os boards yellow options -
+== __complete os boards yellow options --disk-led=
+== __complete os boards yellow options --heartbeat-led ""
+== __complete os boards yellow options --power-led=t
+
+# --- boards raspberrypi firmware --------------------------------------------
+== os boards raspberrypi firmware
+response: data:{"current_version":"1736899200","latest_version":"1746576000-000138c0","update_available":true,"update_pending":false,"update_blocked":false,"blocked_reason":null}
+== os boards rpi fw
+response: data:{"current_version":"1736899200-000138c0","latest_version":null,"update_available":false}
+== os boards rpi firmware odd versions
+args: os boards rpi firmware
+response: data:{"current_version":"","latest_version":"abc-123","other":"1736899200"}
+== os boards rpi firmware odd versions 2
+args: os boards rpi firmware
+response: data:{"current_version":"1736899200-","latest_version":"-5","x":1}
+== os boards rpi firmware odd versions 3
+args: os boards rpi firmware
+response: data:{"current_version":"+86400-a-b","latest_version":" 86400"}
+== os boards rpi firmware odd versions 4
+args: os boards rpi firmware
+response: data:{"current_version":"0","latest_version":"951782400"}
+== os boards rpi firmware odd versions 5
+args: os boards rpi firmware
+response: data:{"current_version":"253402300799","latest_version":"253402300800"}
+== os boards rpi firmware odd versions 6
+args: os boards rpi firmware
+response: data:{"current_version":"1000000000000","latest_version":"99999999999999999999"}
+== os boards rpi firmware odd versions 7
+args: os boards rpi firmware
+response: data:{"current_version":"1_000","latest_version":"0x10"}
+== os boards rpi firmware number versions
+args: os boards rpi firmware
+response: data:{"current_version":1736899200,"latest_version":true}
+== os boards rpi firmware --raw-json
+response: data:{"current_version":"1736899200","latest_version":"1746576000-000138c0"}
+== os boards rpi firmware (empty data)
+args: os boards rpi firmware
+== os boards rpi firmware extra
+== os boards rpi firmware 404 json
+args: os boards rpi firmware
+response: error:404:Raspberry Pi firmware not supported
+== os boards rpi firmware 404 json empty message
+args: os boards rpi firmware
+response: raw:404:application/json:{"result":"error","message":""}
+== os boards rpi firmware 404 text
+args: os boards rpi firmware
+response: text:404
+== os boards rpi firmware 404 empty
+args: os boards rpi firmware
+response: empty:404
+== os boards rpi firmware 404 raw json
+args: os boards rpi firmware --raw-json
+response: error:404:Raspberry Pi firmware not supported
+== os boards rpi firmware 400
+args: os boards rpi firmware
+response: error:400:Bad board
+== os boards rpi firmware 500 text
+args: os boards rpi firmware
+response: text:500
+== os boards rpi firmware 403 text
+args: os boards rpi firmware
+response: text:403
+== os boards rpi firmware connection refused
+args: os boards rpi firmware --endpoint 127.0.0.1:1
+== os boards rpi firmware bad endpoint
+args: os boards rpi firmware --endpoint "bad host"
+== __complete os boards raspberrypi ""
+== __complete os boards raspberrypi firmware ""
+== __complete os boards raspberrypi firmware update ""
+
+# --- boards raspberrypi firmware update -------------------------------------
+== os boards rpi firmware update (confirm)
+args: os boards raspberrypi firmware update
+route: GET /os/boards/raspberrypi/firmware = data:{"current_version":"1736899200","latest_version":"1746576000-000138c0","update_available":true,"update_pending":false,"update_blocked":false,"blocked_reason":null}
+stdin: YES\n
+== os boards rpi fw up (lower-case yes)
+args: os boards rpi fw up
+route: GET /os/boards/raspberrypi/firmware = data:{"current_version":"1736899200","latest_version":"1746576000","update_available":true}
+stdin: yes\n
+== os boards rpi fw upgrade (no versions)
+args: os boards rpi fw upgrade
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+stdin: Yes\n
+== os boards rpi fw update (only current)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"current_version":"1736899200","latest_version":"","update_available":true}
+stdin: YES\n
+== os boards rpi fw update (no update_available)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"current_version":"1736899200","latest_version":"abc"}
+stdin: YES\n
+== os boards rpi fw update (update_available not bool)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":"false","update_pending":"true","update_blocked":1}
+stdin: YES\n
+== os boards rpi fw update (empty data)
+args: os boards rpi fw update
+stdin: YES\n
+== os boards rpi fw update (declined)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+stdin: no\n
+== os boards rpi fw update (n)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+stdin: N\n
+== os boards rpi fw update (retry then yes)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+stdin: maybe\n  yes  \n
+== os boards rpi fw update (two wrong answers)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+stdin: maybe\n\nyes\n
+== os boards rpi fw update (eof)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+== os boards rpi fw update (eof without newline)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+stdin: yes
+== os boards rpi fw update (blocked with reason)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true,"update_blocked":true,"blocked_reason":"Not booted from SD card"}
+stdin: YES\n
+== os boards rpi fw update (blocked without reason)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true,"update_blocked":true,"blocked_reason":null,"update_pending":true}
+== os boards rpi fw update (pending)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":false,"update_pending":true}
+== os boards rpi fw update (up to date)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":false,"current_version":"1736899200-000138c0","latest_version":"1736899200-000138c0"}
+== os boards rpi fw update (up to date, no version)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":false,"current_version":null}
+== os boards rpi fw update (info 404 json)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = error:404:Raspberry Pi firmware not supported
+== os boards rpi fw update (info 404 text)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = text:404
+== os boards rpi fw update (info 400)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = error:400:Bad board
+== os boards rpi fw update (info 400 raw json)
+args: os boards rpi fw update --raw-json
+route: GET /os/boards/raspberrypi/firmware = error:400:Bad board
+== os boards rpi fw update (info 500 text)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = text:500
+== os boards rpi fw update (info unknown result)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = json:{"result":"weird","data":{"update_available":false}}
+stdin: YES\n
+== os boards rpi fw update (post error)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+route: POST /os/boards/raspberrypi/firmware/update = error:400:Flash failed
+stdin: YES\n
+== os boards rpi fw update (post 500 text)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+route: POST /os/boards/raspberrypi/firmware/update = text:500
+stdin: YES\n
+== os boards rpi fw update (post data)
+args: os boards rpi fw update
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":true}
+route: POST /os/boards/raspberrypi/firmware/update = data:{"job_id":"x"}
+stdin: YES\n
+== os boards rpi fw update --raw-json
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":false,"update_blocked":true}
+stdin: YES\n
+== os boards rpi fw update --raw-json declined
+args: os boards rpi fw update --raw-json
+route: GET /os/boards/raspberrypi/firmware = data:{"update_available":false}
+stdin: n\n
+== os boards rpi fw update extra
+== os boards rpi fw update connection refused
+args: os boards rpi fw update --endpoint 127.0.0.1:1
+
+# --- config swap ------------------------------------------------------------
+== os config swap info
+response: data:{"swap_size":"2G","swappiness":10}
+== os conf sw in
+== os cfg swap info --raw-json
+response: data
+== os config swap info error
+args: os config swap info
+response: error:400:Not supported
+== os config swap info extra
+== os config swap options
+== os config swap options --raw-json
+== os config swap option --swap-size=2G --swappiness=10
+== os config swap opt --swap-size 500M
+== os config swap opts --swappiness 0
+== os config swap op --swappiness=200
+== os config swap options --swap-size ""
+== os config swap options --swappiness 1
+== os config swap options --swappiness -5
+== os config swap options --swappiness 0x10
+== os config swap options --swappiness abc
+== os config swap options --swappiness 1.5
+== os config swap options --swappiness 99999999999999999999
+== os config swap options --swappiness
+== os config swap options --swap-size
+== os config swap options extra
+== os config swap options error
+args: os config swap options --swap-size=bogus
+response: error:400:Invalid swap size
+== os config swap options data response
+args: os config swap options --swappiness=60
+response: data:{"a":1}
+== os config swap options --raw-json --swappiness=60
+response: data:{"a":1}
+== os config swap options --raw-json error
+args: os config swap options --raw-json --swappiness=60
+response: error
+== __complete os config ""
+== __complete os config swap ""
+== __complete os config swap options ""
+== __complete os config swap options -
+== __complete os config swap options --swap-size ""
+== __complete os config swap options --swappiness ""
+== __complete os config swap options --swappiness=1
+== __complete os config swap options --swappiness 20
+
+# --- datadisk ---------------------------------------------------------------
+== os datadisk list
+response: data:{"devices":["/dev/sda"],"disks":[{"name":"SSD","vendor":"Samsung","model":"860","serial":"S3Z","size":500107862016,"id":"Samsung-SSD","dev_path":"/dev/sda"}]}
+== os data in
+== os datadisk inf
+== os datadisk info
+== os datadisk show --raw-json
+response: data
+== os datadisk list error
+args: os datadisk list
+response: error
+== os datadisk list extra
+== os datadisk move
+== os datadisk move /dev/sda /dev/sdb
+== os datadisk move /dev/sda
+== os datadisk migrate "My Disk"
+== os data mov ""
+== os datadisk move error
+args: os datadisk move /dev/sdx
+response: error:400:Unknown device
+== os datadisk move /dev/sda --raw-json
+== __complete os datadisk ""
+== __complete os datadisk list ""
+== __complete os datadisk move ""
+== __complete os datadisk move /
+== __complete os datadisk move /dev/sd
+== __complete os datadisk move /dev/sda ""
+== __complete os datadisk wipe ""
+== os datadisk wipe (confirm)
+args: os datadisk wipe
+stdin: YES\n
+== os datadisk wipe (lower-case)
+args: os datadisk wipe
+stdin: yes\r\n
+== os datadisk reset (declined)
+args: os datadisk reset
+stdin: no\n
+== os datadisk erase (retry then yes)
+args: os datadisk erase
+stdin: y\nyes\n
+== os datadisk wipe (two wrong answers)
+args: os datadisk wipe
+stdin: y\ny\nyes\n
+== os datadisk wipe (empty answers)
+args: os datadisk wipe
+stdin: \n\n
+== os datadisk wipe (eof)
+args: os datadisk wipe
+== os datadisk wipe (eof after retry)
+args: os datadisk wipe
+stdin: what\n
+== os datadisk wipe (api error)
+args: os datadisk wipe
+response: error:400:Not allowed
+stdin: YES\n
+== os datadisk wipe (403 text)
+args: os datadisk wipe
+response: text:403
+stdin: YES\n
+== os datadisk wipe --raw-json
+stdin: YES\n
+== os datadisk wipe extra
+stdin: YES\n
+== hassos datadisk wipe
+stdin: n\n
+
+# --- completion -------------------------------------------------------------
+== __complete os ""
+== __complete os b
+== __complete hassos ""
+== __complete os boards ""
+== __complete os info ""
+== __complete os update ""
+== __complete os update -
+== __complete os update --version ""
+== __complete os import ""
+== __completeNoDesc os ""

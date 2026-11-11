@@ -1,0 +1,233 @@
+# Parity cases for `ha mounts`.
+
+== mounts
+== mounts --help
+== mounts bogus
+== mount
+== mnts --help
+== mnt info
+response: data
+== mounts add --help
+== mounts delete --help
+== mounts info --help
+== mounts options --help
+== mounts reload --help
+== mounts update --help
+== help mounts update
+
+# --- info ---
+== mounts info
+response: data:{"default_backup_mount":null,"mounts":[{"name":"my_share","type":"cifs","usage":"media","server":"server.local","share":"media","state":"active","read_only":false,"version":null,"port":null,"user_path":"/media/my_share"}]}
+== mounts in
+response: data
+== mounts inf
+== mounts info --raw-json
+response: data
+== mounts info extra
+== mounts info --bogus
+== mounts info error
+args: mounts info
+response: error
+== mounts info 500 text
+args: mounts info
+response: text:500
+== mounts info connection refused
+args: mounts info --endpoint 127.0.0.1:1
+
+# --- add ---
+== mounts add my_share
+== mounts add
+== mounts add a b
+== mounts add my_share --usage media --type cifs --server server.local --share media
+== mounts create media_disk --usage media --type disk --device /dev/sda1
+== mounts new n -t nfs -u backup -s nas -a /srv/backup
+== mounts add n --type "" --usage ""
+== mounts add n --type=nfs
+== mounts add n --usage=share
+== mounts add n --port 445
+== mounts add n -o 0
+== mounts add n --port -1
+== mounts add n --port x
+== mounts add n --port
+== mounts add n -r share -n user -p pass -v 2.0
+== mounts add n --username "" --password "" --version "" --share "" --server "" --path ""
+== mounts add n --device /dev/sdb1 --uuid 1234-ABCD
+== mounts add n --uuid ""
+== mounts add n --read-only
+== mounts add n --read-only=true
+== mounts add n --read-only=false
+== mounts add n --read-only false
+== mounts add n --read-only=x
+== mounts add all flags
+args: mounts add n -t cifs -u media -s srv -o 139 -r sh -n u -p pw -v 1.0 -a /p --device /dev/sda1 --uuid abc --read-only
+== mounts add "a b/c"
+== mounts add n --bogus
+== mounts add n error
+args: mounts add n --server s
+response: error:400:Could not mount
+== mounts add n 500 text
+args: mounts add n
+response: text:500
+== mounts add n --raw-json
+response: data:{"a":1}
+== mounts add n connection refused
+args: mounts add n --endpoint 127.0.0.1:1
+== mounts add n bad endpoint
+args: mounts add n --endpoint "bad host"
+
+# --- delete ---
+== mounts delete my_share
+== mounts del n
+== mounts remove n
+== mounts rm n
+== mounts delete
+== mounts delete a b
+== mounts delete "a b"
+== mounts delete n error
+args: mounts delete n
+response: error:404:No mount exists with name n
+== mounts delete n 403
+args: mounts delete n
+response: text:403
+== mounts delete n --raw-json
+== mounts delete n connection refused
+args: mounts delete n --endpoint 127.0.0.1:1
+== mounts delete n bad endpoint
+args: mounts delete n --endpoint "bad host"
+
+# --- options ---
+== mounts options
+== mounts options --default-backup-mount my_share
+== mounts option --default-backup-mount=my_share
+== mounts opt --default_backup_mount my_share
+== mounts opts --default_backup_mount=x
+== mounts op --default-backup-mount ""
+== mounts options --default-backup-mount=
+== mounts options --default-backup-mount
+== mounts options extra
+== mounts options error
+args: mounts options --default-backup-mount nope
+response: error:400:Mount nope is not used for backups
+== mounts options --default-backup-mount a --raw-json
+
+# --- reload ---
+== mounts reload my_share
+== mounts re n
+== mounts refresh n
+== mounts remount n
+== mounts reload
+== mounts reload a b
+== mounts reload n error
+args: mounts reload n
+response: error:400:Reload failed
+== mounts reload n --raw-json
+== mounts reload n connection refused
+args: mounts reload n --endpoint 127.0.0.1:1
+== mounts reload n bad endpoint
+args: mounts reload n --endpoint "bad host"
+
+# --- update ---
+== mounts update my_share --usage media --type cifs --server server.local --share media
+== mounts update media_disk --usage media --type disk --device /dev/sda1 --read-only
+== mounts update n
+== mounts update n --type cifs
+== mounts update n --usage media
+== mounts update
+== mounts update --type cifs --usage media
+== mounts update a b --type cifs --usage media
+== mounts change n -t nfs -u backup -s nas -a /srv
+== mounts set n -t cifs -u share
+== mounts up n -t cifs -u share
+== mounts modify n -t cifs -u share
+== mounts mod n -t cifs -u share
+== mounts update n --type "" --usage ""
+== mounts update n -t cifs -u media --port 445 --read-only=false
+== mounts update n -t cifs -u media --port 0
+== mounts update n -t cifs -u media -n u -p pw -v 2.1 --uuid abc
+== mounts update n -t cifs -u media --bogus
+== mounts update n error
+args: mounts update n -t cifs -u media
+response: error:404:No mount exists with name n
+== mounts update n 500 text
+args: mounts update n -t cifs -u media
+response: text:500
+== mounts update n --raw-json -t cifs -u media
+== mounts update n connection refused
+args: mounts update n -t cifs -u media --endpoint 127.0.0.1:1
+== mounts update n bad endpoint
+args: mounts update n -t cifs -u media --endpoint "bad host"
+
+# --- completion ---
+== __complete mounts ""
+== __complete mounts re
+== __complete mounts info ""
+== __complete mounts options ""
+== __complete mounts options -
+== __complete mounts options --default-backup-mount ""
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active","server":"nas.local","share":"backups"},{"name":"med","usage":"media","state":"active"}]}
+== __complete mounts options --default_backup_mount=
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active","server":"nas.local","share":"backups"}]}
+== __complete mounts options --default-backup-mount (error)
+args: __complete mounts options --default-backup-mount ""
+response: error
+== __complete mounts add ""
+route: GET /mounts = data:{"mounts":[{"name":"my_share","state":"active","usage":"media","server":"server.local","share":"media","type":"cifs"},{"name":"nfs1","state":"failed","usage":"backup","server":"nas","path":"/srv"},{"name":"disk1","state":"active","usage":"share","uuid":"1234-ABCD","filesystem":"ext4"},{"name":"bare"},{"state":"active"},"junk",{"name":7},{"name":""}]}
+== __complete mounts add n ""
+route: GET /mounts = data:{"mounts":[{"name":"my_share"}]}
+== __complete mounts delete ""
+route: GET /mounts = data:{"mounts":[{"name":"my_share","state":"active","usage":"media"}]}
+== __complete mounts delete m
+route: GET /mounts = data:{"mounts":[{"name":"my_share","state":"active","usage":"media"},{"name":"other"}]}
+== __complete mounts reload ""
+route: GET /mounts = data:{"mounts":[{"name":"my_share","state":"active","usage":"media"}]}
+== __complete mounts update ""
+route: GET /mounts = data:{"mounts":[{"name":"my_share","state":"active","usage":"media"}]}
+== __complete mounts update (api error)
+args: __complete mounts update ""
+response: error
+== __complete mounts update (403 text)
+args: __complete mounts update ""
+response: text:403
+== __complete mounts update (no mounts)
+args: __complete mounts update ""
+response: data:{"mounts":null}
+== __complete mounts update (not a list)
+args: __complete mounts update ""
+response: data:{"mounts":"x"}
+== __complete mounts update (connection refused)
+args: __complete mounts update "" --endpoint 127.0.0.1:1
+== __complete mounts add -
+== __complete mounts update -
+== __complete mounts update n -
+== __complete mounts update n --type cifs -
+== __complete mounts add --type ""
+== __complete mounts add -t ""
+== __complete mounts add --type=n
+== __complete mounts add --usage ""
+== __complete mounts update -u ""
+== __complete mounts add --server ""
+== __complete mounts add --port ""
+== __complete mounts add --share ""
+== __complete mounts add --username ""
+== __complete mounts add --password ""
+== __complete mounts add --version ""
+== __complete mounts add --path ""
+== __complete mounts add --uuid ""
+== __complete mounts add --read-only=
+== __complete mounts add --device ""
+route: GET /host/disks = data:{"disks":[{"name":"Samsung SSD","vendor":"Samsung","model":"T7","partitions":[{"device":"/dev/sda1","label":"data","size":500107862016,"mountable":true},{"device":"/dev/sda2","size":999,"mountable":true},{"device":"/dev/sda3","size":1000,"mountable":true},{"device":"/dev/sda4","label":"sys","size":1,"mountable":false},{"device":"","mountable":true},{"mountable":true},{"device":"/dev/sda5","label":"","size":0,"mountable":true},{"device":"/dev/sda6","size":1500000,"mountable":"yes"},"junk"]},{"vendor":"WD","model":"Elements","partitions":[{"device":"/dev/sdb1","size":4000787030016,"mountable":true},{"device":"/dev/sdb2","size":5000000000000000,"mountable":true},{"device":"/dev/sdb3","size":1550000,"mountable":true},{"device":"/dev/sdb4","size":999999,"mountable":true},{"device":"/dev/sdb5","size":12.5,"mountable":true},{"device":"/dev/sdb6","size":-4,"mountable":true}]},{"vendor":"","model":"OnlyModel","partitions":[{"device":"/dev/sdc1","mountable":true}]},{"name":"","partitions":[{"device":"/dev/sdd1","mountable":true,"size":"big"}]},{"partitions":null},{"name":"nopart"},"junk"]}
+== __complete mounts update n --device=
+route: GET /host/disks = data:{"disks":[{"name":"Disk","partitions":[{"device":"/dev/sda1","label":"data","size":2500,"mountable":true}]}]}
+== __complete mounts add --device (api error)
+args: __complete mounts add --device ""
+response: error:404:Not found
+== __complete mounts add --device (no disks)
+args: __complete mounts add --device ""
+response: data:{"disks":[]}
+== __complete mounts add --device (not a list)
+args: __complete mounts add --device ""
+response: data:{"disks":{}}
+== __complete mounts add --device (connection refused)
+args: __complete mounts add --device "" --endpoint 127.0.0.1:1
+== __completeNoDesc mounts delete ""
+route: GET /mounts = data:{"mounts":[{"name":"my_share","state":"active","usage":"media"}]}

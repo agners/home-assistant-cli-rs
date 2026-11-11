@@ -1,0 +1,206 @@
+# Parity cases for `ha host`. Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== host
+== ho
+== host --help
+== host bogus
+== host disks --help
+== host disks usage --help
+== host info --help
+== host logs --help
+== host logs boots --help
+== host logs identifiers --help
+== host options --help
+== host reboot --help
+== host reload --help
+== host shutdown --help
+== help host logs boots
+
+# --- info -------------------------------------------------------------------
+== host info
+response: data
+== ho in
+response: data:{"hostname":"homeassistant","kernel":"6.12.1","boot_timestamp":1700000000000000}
+== host inf --raw-json
+response: data
+== host info extra
+== host info --bogus
+== host info api error
+args: host info
+response: error
+== host info api error raw json
+args: host info --raw-json
+response: error:500:Internal problem
+== host info 401 text
+args: host info
+response: text:401
+== host info connection refused
+args: host info --endpoint 127.0.0.1:1
+
+# --- disks ------------------------------------------------------------------
+== host disks
+response: data:{"disks":[{"id":"sda","size":1000,"partitions":[{"name":"sda1"}]}]}
+== host disk
+== host disks --raw-json
+response: data
+== host disks bogus
+== host disks api error
+args: host disks
+response: error:400:No disks
+== host disks usage
+response: data:{"id":"root","label":"Root","total_bytes":100,"used_bytes":50,"children":[]}
+== host disks us
+== host disk use --raw-json
+response: data
+== host disks usage extra
+== host disks usage api error
+args: host disks usage
+response: error
+
+# --- logs -------------------------------------------------------------------
+== host logs
+response: logs
+== host log --follow
+response: logs
+== host lg -f -n 100
+response: logs
+== host logs --lines 1
+response: logs
+== host logs -n0
+response: logs
+== host logs --boot -1
+response: logs
+== host logs -b 2 -f -v
+response: logs
+== host logs --verbose
+response: logs
+== host logs --identifier kernel
+response: logs
+== host logs -t kernel -f
+response: logs
+== host logs -t "sys temd/x" --follow --boot 0
+response: logs
+== host logs -b abc -t dropbear -n 5 -v
+response: logs
+== host logs --identifier ""
+response: logs
+== host logs -t follow -f
+response: logs
+== host logs --identifier
+== host logs --lines x
+== host logs extra
+== host logs -x
+== host logs error status
+args: host logs
+response: text:500:boom\n
+== host logs json error body
+args: host logs -t nope
+response: error:400:No such identifier
+== host logs connection refused
+args: host logs --endpoint 127.0.0.1:1
+== host logs boots
+response: data:{"boots":{"0":"abcdef","-1":"bcdefa"}}
+== host logs list-boots
+== host log lb --raw-json
+response: data:{"boots":{"0":"abcdef"}}
+== host logs boots extra
+== host logs boots api error
+args: host logs boots
+response: error
+== host logs boots -f
+== host logs identifiers
+response: data:{"identifiers":["kernel","systemd","dropbear"]}
+== host logs ids
+== host logs list-identifiers
+== host lg li --raw-json
+response: data:{"identifiers":[]}
+== host logs identifiers extra
+== host logs identifiers api error
+args: host logs identifiers
+response: error:404:Not found
+
+# --- options ----------------------------------------------------------------
+== host options
+== host options --hostname homeassistant.local
+== host option --hostname=ha
+== host opt --hostname ""
+== host opts --hostname "a b<c>"
+== host op --hostname x --raw-json
+== host options --hostname
+== host options extra
+== host options api error
+args: host options --hostname bad_name
+response: error:400:Invalid hostname
+
+# --- reboot / shutdown / reload ---------------------------------------------
+== host reboot
+== host restart
+== host rb --force
+== host reboot -f
+== host reboot --force=true
+== host reboot --force=false
+== host reboot --force false
+== host reboot --force=maybe
+== host reboot extra
+== host reboot --raw-json
+== host reboot api error
+args: host reboot
+response: error:400:Offline migration in progress
+== host shutdown
+== host sh
+== host shutdown --force
+== host sh -f
+== host shutdown --force=false
+== host shutdown --force=maybe
+== host shutdown extra
+== host shutdown api error
+args: host shutdown -f
+response: error
+== host reload
+== host update
+== host refresh
+== host re --raw-json
+== host reload extra
+== host reload data response
+args: host reload
+response: data:{"job_id":"abc"}
+== host reload api error
+args: host reload
+response: error
+
+# --- completion -------------------------------------------------------------
+== __complete host ""
+== __complete host lo
+== __complete host info ""
+== __complete host disks ""
+== __complete host disks usage ""
+== __complete host logs ""
+== __complete host logs -
+== __complete host logs boots ""
+== __complete host logs --follow=
+== __complete host logs --lines ""
+== __complete host logs --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete host logs -b b
+response: data:{"boots":{"0":"abcdef","-1":"bcdefa"}}
+== __complete host logs --identifier ""
+response: data:{"identifiers":["kernel","systemd",5,"dropbear"]}
+== __complete host logs -t k
+response: data:{"identifiers":["kernel","systemd"]}
+== __complete host logs --identifier= (api error)
+args: __complete host logs --identifier=
+response: error
+== __complete host logs --identifier= (not a list)
+args: __complete host logs --identifier=
+response: data:{"identifiers":{"a":"b"}}
+== __complete host options ""
+== __complete host options -
+== __complete host options --hostname ""
+== __complete host reboot ""
+== __complete host reboot -
+== __complete host reboot --force=
+== __complete host shutdown --force ""
+== __complete host shutdown --force=t
+== __complete host reload ""
+== __completeNoDesc host ""

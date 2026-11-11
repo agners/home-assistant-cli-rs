@@ -1,0 +1,493 @@
+# Parity cases for `ha core`. Format: see tests/parity.py.
+
+# --- help / tree ---
+== core
+== core --help
+== core bogus
+== help core
+== core check --help
+== core info --help
+== core logs --help
+== core options --help
+== core rebuild --help
+== core restart --help
+== core start --help
+== core stats --help
+== core stop --help
+== core update --help
+== __complete core ""
+== __completeNoDesc core ""
+# --- group aliases / deprecation warning ---
+== homeassistant info
+response: data
+== home-assistant info
+response: data
+== ha info
+response: data
+== ha
+== homeassistant --help
+== home-assistant --help
+== help ha
+== help homeassistant info
+== ha ha
+== homeassistant bogus
+== ha info extra
+== ha info --bogus
+== core options --image ha
+== core options --image homeassistant --refresh-token home-assistant
+== ha options --image=ha
+== ha check api error
+args: ha check
+response: error
+== --raw-json ha stats
+response: data
+== dns info (no warning outside core)
+args: dns info --endpoint {endpoint}
+response: data
+== __complete ha ""
+== __complete homeassistant in
+== __complete ha options --boot ""
+# --- info ---
+== core info
+response: data:{"version":"2025.8.0","version_latest":"2025.9.0","update_available":true,"machine":"qemux86-64","ip_address":"172.30.32.1","arch":"amd64","image":"ghcr.io/home-assistant/qemux86-64-homeassistant","boot":true,"port":8123,"ssl":false,"watchdog":true,"audio_input":null,"audio_output":null,"backups_exclude_database":false,"duplicate_log_file":false}
+== core in
+response: data:{"version":"2025.8.0","version_latest":"2025.9.0","update_available":true,"machine":"qemux86-64","ip_address":"172.30.32.1","arch":"amd64","image":"ghcr.io/home-assistant/qemux86-64-homeassistant","boot":true,"port":8123,"ssl":false,"watchdog":true,"audio_input":null,"audio_output":null,"backups_exclude_database":false,"duplicate_log_file":false}
+== core inf
+response: data:{"version":"2025.8.0","version_latest":"2025.9.0","update_available":true,"machine":"qemux86-64","ip_address":"172.30.32.1","arch":"amd64","image":"ghcr.io/home-assistant/qemux86-64-homeassistant","boot":true,"port":8123,"ssl":false,"watchdog":true,"audio_input":null,"audio_output":null,"backups_exclude_database":false,"duplicate_log_file":false}
+== core info (empty data)
+args: core info
+== core info --raw-json
+response: data:{"version":"2025.8.0","version_latest":"2025.9.0","update_available":true,"machine":"qemux86-64","ip_address":"172.30.32.1","arch":"amd64","image":"ghcr.io/home-assistant/qemux86-64-homeassistant","boot":true,"port":8123,"ssl":false,"watchdog":true,"audio_input":null,"audio_output":null,"backups_exclude_database":false,"duplicate_log_file":false}
+== core info extra
+== core info --bogus
+== core info api error
+args: core info
+response: error:400:Something failed
+== core info api error raw json
+args: core info --raw-json
+response: error
+== core info 500 text
+args: core info
+response: text:500
+== core info connection refused
+args: core info --endpoint 127.0.0.1:1
+== __complete core info ""
+== __complete core info -
+# --- stats ---
+== core stats
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== core status
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== core stat
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== core stats (empty data)
+args: core stats
+== core stats --raw-json
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== core stats extra
+== core stats --bogus
+== core stats api error
+args: core stats
+response: error:400:Something failed
+== core stats api error raw json
+args: core stats --raw-json
+response: error
+== core stats 500 text
+args: core stats
+response: text:500
+== core stats connection refused
+args: core stats --endpoint 127.0.0.1:1
+== __complete core stats ""
+== __complete core stats -
+== core st (start wins or stats)
+args: core st
+# --- logs ---
+== core logs
+response: logs
+== core log --follow
+response: logs
+== core lg -f -n 100
+response: logs
+== core logs --lines 1
+response: logs
+== core logs -n0
+response: logs
+== core logs --boot -1
+response: logs
+== core logs -b 2 -f -v
+response: logs
+== core logs --boot "a b/c" --verbose
+response: logs
+== core logs -fvn5
+response: logs
+== core logs --follow=false --verbose=true
+response: logs
+== core logs --follow false
+== core logs --lines x
+== core logs --lines -1
+== core logs --lines
+== core logs -x
+== core logs -b
+== core logs extra
+== core logs error status
+args: core logs
+response: text:500:boom\n
+== core logs json error body
+args: core logs
+response: error:400:No such boot
+== core logs connection refused
+args: core logs --endpoint 127.0.0.1:1
+== __complete core logs ""
+== __complete core logs -
+== __complete core logs --follow=
+== __complete core logs --lines ""
+== __complete core logs --verbose ""
+== __complete core logs --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete core logs -b a
+response: data:{"boots":{"0":"abcdef","-1":"bcdefa"}}
+== __complete core logs --boot= (api error)
+args: __complete core logs --boot=
+response: error
+# --- check ---
+== core check
+== core validate
+== core chk
+== core ch
+== core check data response
+args: core check
+response: data:{"job_id":"abc"}
+== core check --raw-json
+== core check --no-progress
+== core check extra
+== core check --bogus
+== core check api error
+args: core check
+response: error:400:Something failed
+== core check api error raw json
+args: core check --raw-json
+response: error
+== core check 502
+args: core check
+response: text:502
+== core check connection refused
+args: core check --endpoint 127.0.0.1:1
+== __complete core check ""
+== __complete core check -
+# --- start ---
+== core start
+== core run
+== core start data response
+args: core start
+response: data:{"job_id":"abc"}
+== core start --raw-json
+== core start --no-progress
+== core start extra
+== core start --bogus
+== core start api error
+args: core start
+response: error:400:Something failed
+== core start api error raw json
+args: core start --raw-json
+response: error
+== core start 502
+args: core start
+response: text:502
+== core start connection refused
+args: core start --endpoint 127.0.0.1:1
+== __complete core start ""
+== __complete core start -
+# --- stop ---
+== core stop
+== core stop data response
+args: core stop
+response: data:{"job_id":"abc"}
+== core stop --raw-json
+== core stop --no-progress
+== core stop extra
+== core stop --bogus
+== core stop api error
+args: core stop
+response: error:400:Something failed
+== core stop api error raw json
+args: core stop --raw-json
+response: error
+== core stop 502
+args: core stop
+response: text:502
+== core stop connection refused
+args: core stop --endpoint 127.0.0.1:1
+== __complete core stop ""
+== __complete core stop -
+== core stop --force
+== core stop -f
+== core stop --force=true
+== core stop --force=false
+== core stop -f=false
+== core stop --force false
+== core stop --force=x
+== core stop -s
+== core stop --force --raw-json
+== core stop force error
+args: core stop -f
+response: error:400:Core is migrating
+== __complete core stop --force ""
+== __complete core stop --force=
+== __complete core stop -f ""
+# --- restart ---
+== core restart
+== core reboot
+== core restart data response
+args: core restart
+response: data:{"job_id":"abc"}
+== core restart --raw-json
+== core restart --no-progress
+== core restart extra
+== core restart --bogus
+== core restart api error
+args: core restart
+response: error:400:Something failed
+== core restart api error raw json
+args: core restart --raw-json
+response: error
+== core restart 502
+args: core restart
+response: text:502
+== core restart connection refused
+args: core restart --endpoint 127.0.0.1:1
+== __complete core restart ""
+== __complete core restart -
+== core restart --safe-mode
+== core restart -s
+== core restart --force
+== core restart -f
+== core restart -sf
+== core restart -fs
+== core restart --safe-mode --force
+== core restart --safe-mode=true --force=true
+== core restart --safe-mode=false
+== core restart --force=false
+== core restart --safe-mode=false --force=false
+== core restart --safe-mode=false -f
+== core restart -s=false
+== core restart --safe-mode false
+== core restart --safe-mode=x
+== core restart --safe_mode
+== core restart -s --raw-json
+== core restart -s -s
+== core restart flags error
+args: core restart -s -f
+response: error:400:Not possible
+== __complete core restart --safe-mode ""
+== __complete core restart --safe-mode=
+== __complete core restart --force=t
+== __complete core restart -s ""
+== __complete core restart --s
+# --- rebuild ---
+== core rebuild
+== core rb
+== core reinstall
+== core rebuild data response
+args: core rebuild
+response: data:{"job_id":"abc"}
+== core rebuild --raw-json
+== core rebuild --no-progress
+== core rebuild extra
+== core rebuild --bogus
+== core rebuild api error
+args: core rebuild
+response: error:400:Something failed
+== core rebuild api error raw json
+args: core rebuild --raw-json
+response: error
+== core rebuild 502
+args: core rebuild
+response: text:502
+== core rebuild connection refused
+args: core rebuild --endpoint 127.0.0.1:1
+== __complete core rebuild ""
+== __complete core rebuild -
+== core rebuild --safe-mode
+== core rebuild -s
+== core rebuild --force
+== core rebuild -f
+== core rebuild -sf
+== core rebuild -fs
+== core rebuild --safe-mode --force
+== core rebuild --safe-mode=true --force=true
+== core rebuild --safe-mode=false
+== core rebuild --force=false
+== core rebuild --safe-mode=false --force=false
+== core rebuild --safe-mode=false -f
+== core rebuild -s=false
+== core rebuild --safe-mode false
+== core rebuild --safe-mode=x
+== core rebuild --safe_mode
+== core rebuild -s --raw-json
+== core rebuild -s -s
+== core rebuild flags error
+args: core rebuild -s -f
+response: error:400:Not possible
+== __complete core rebuild --safe-mode ""
+== __complete core rebuild --safe-mode=
+== __complete core rebuild --force=t
+== __complete core rebuild -s ""
+== __complete core rebuild --s
+# --- update ---
+== core update
+== core upgrade
+== core downgrade
+== core up
+== core down
+== core update data response
+args: core update
+response: data:{"job_id":"abc"}
+== core update --raw-json
+== core update --no-progress
+== core update extra
+== core update --bogus
+== core update api error
+args: core update
+response: error:400:Something failed
+== core update api error raw json
+args: core update --raw-json
+response: error
+== core update 502
+args: core update
+response: text:502
+== core update connection refused
+args: core update --endpoint 127.0.0.1:1
+== __complete core update ""
+== __complete core update -
+== core update --version 2025.08.0
+== core upgrade --version=5
+== core downgrade --version ""
+== core down --version
+== core update --version 1 --version 2
+== core update version error
+args: core update --version 1
+response: error:400:Version 1 not found
+== core update --raw-json --version 3
+response: data:{"a":1}
+== __complete core update --version ""
+== __complete core update --ver
+== core update --backup
+== core update --backup=true
+== core update --backup=false
+== core update --backup false
+== core update --backup=x
+== core update --backup --version 2025.9.0
+== core update --version 2025.9.0 --backup=false
+== core update --version "" --backup
+== core update --backup --raw-json
+== core update backup error
+args: core update --backup --version 1
+response: error:400:Backup failed
+== __complete core update --backup ""
+== __complete core update --backup=
+== __complete core update --b
+# --- options ---
+== core options
+== core option
+== core opt
+== core opts
+== core op
+== core options data response
+args: core options
+response: data:{"job_id":"abc"}
+== core options --raw-json
+== core options --no-progress
+== core options extra
+== core options --bogus
+== core options api error
+args: core options
+response: error:400:Something failed
+== core options api error raw json
+args: core options --raw-json
+response: error
+== core options 502
+args: core options
+response: text:502
+== core options connection refused
+args: core options --endpoint 127.0.0.1:1
+== __complete core options ""
+== __complete core options -
+== core options --boot
+== core options --boot=true
+== core options --boot=false
+== core options --boot false
+== core options --boot=x
+== core options --image ghcr.io/x/y
+== core options --image ""
+== core options --image=
+== core options --image
+== core options --port 8124
+== core options --port=0
+== core options --port 0x10
+== core options --port -5
+== core options --port 8123
+== core options --port abc
+== core options --port 99999999999999999999
+== core options --port 9223372036854775807
+== core options --port
+== core options --port 1.5
+== core options --ssl
+== core options --ssl=true
+== core options --ssl=false
+== core options --watchdog
+== core options --watchdog=false
+== core options --watchdog=true
+== core options --refresh-token abc
+== core options --refresh-token ""
+== core options --refresh_token abc
+== core options --refresh_token=""
+== core options --audio-input mic
+== core options --audio-input ""
+== core options --audio_input mic
+== core options --audio-output spk
+== core options --audio-output ""
+== core options --audio_output=spk
+== core options --backups-exclude-database
+== core options --backups-exclude-database=true
+== core options --backups-exclude-database=false
+== core options --backups_exclude_database=true
+== core options --backups_exclude_database
+== core options --backups-exclude-database true
+== core options --duplicate-log-file
+== core options --duplicate-log-file=true
+== core options --duplicate-log-file=false
+== core options --duplicate_log_file=true
+== core options --duplicate_log_file
+== core options --bogus_flag
+== core options --audio_bogus x
+== core options --boot=false --image img --port 1 --ssl --watchdog=false --refresh-token tok --audio-input "" --audio-output out --backups-exclude-database=true --duplicate-log-file=true
+== core options --image a --image b
+== core options --image a --image=
+== core options --ssl --raw-json
+== core options --image "a<b>&c\"d"
+== core options flags error
+args: core options --port 1
+response: error:400:Invalid port
+== __complete core options --boot ""
+== __complete core options --boot=
+== __complete core options --image ""
+== __complete core options --port ""
+== __complete core options --ssl ""
+== __complete core options --ssl=f
+== __complete core options --watchdog ""
+== __complete core options --refresh-token ""
+== __complete core options --refresh_token ""
+== __complete core options --audio-input ""
+== __complete core options --audio-output ""
+== __complete core options --audio_output ""
+== __complete core options --backups-exclude-database ""
+== __complete core options --backups-exclude-database=
+== __complete core options --backups_exclude_database=
+== __complete core options --duplicate-log-file ""
+== __complete core options --duplicate-log-file=t
+== __complete core options --duplicate_log_file=
+== __complete core options --audio
+== __complete core options --audio_
+== __complete core options --backups_
+== __complete core options --ssl -
+== __complete core options --refresh_token x -

@@ -1,0 +1,79 @@
+# Parity cases for `ha time`. Format: see tests/parity.py.
+
+== time
+== ntp
+== timedate --help
+== time bogus
+== time info --help
+== time options --help
+== help time options
+
+== time info
+response: data:{"servers":["pool.ntp.org"],"fallback_servers":["time.google.com"],"timezone":"Europe/Berlin","dt_utc":"2025-11-01T12:00:00+00:00","dt_synchronized":true,"use_ntp":true}
+== ntp in
+response: data
+== timedate inf --raw-json
+response: data
+== time info extra
+== time info --bogus
+== time info api error
+args: time info
+response: error
+== time info api error raw json
+args: time info --raw-json
+response: error:500:Internal problem
+== time info connection refused
+args: time info --endpoint 127.0.0.1:1
+
+== time options
+== time options --servers pool.ntp.org --servers time.cloudflare.com
+== time option -s pool.ntp.org
+== time opt -spool.ntp.org -s=x
+== time opts --servers ""
+== time op --fallback-servers time.google.com
+== time options -f a -f b -s c
+== time options --clear-servers
+== time options --clear-fallback-servers
+== time options --clear-servers --clear-fallback-servers
+== time options --clear-servers=false
+== time options --clear-fallback-servers=false
+== time options --clear-servers=false --clear-fallback-servers=true
+== time options --servers a --clear-fallback-servers
+== time options --fallback-servers a --clear-servers
+== time options --servers a --clear-servers
+== time options --servers a --clear-servers=false
+== time options --fallback-servers a --clear-fallback-servers
+== time options -f a --clear-fallback-servers=false -s b --clear-servers
+== time options --clear-servers=maybe
+== time options --clear-servers false
+== time options --servers
+== time options -f
+== time options extra
+== time options --servers a --raw-json
+== time options api error
+args: time options --servers bad
+response: error:400:Invalid NTP server
+== time options data response
+args: time options --clear-servers
+response: data:{"a":1}
+
+== __complete time ""
+== __complete time o
+== __complete time info ""
+== __complete time options ""
+== __complete time options -
+== __complete time options --servers ""
+== __complete time options -s ""
+== __complete time options --fallback-servers ""
+== __complete time options -f ""
+== __complete time options --clear-servers=
+== __complete time options --clear-fallback-servers ""
+== __complete time options --clear-servers=t
+== __complete time options --servers a -
+== __complete time options --clear-servers -
+== __completeNoDesc time ""
+
+# pflag quirk: GetStringArray of a single "" is an empty list
+== time options --servers "" --servers ""
+== time options --servers a --servers ""
+== time options -f ""

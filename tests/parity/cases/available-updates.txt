@@ -1,0 +1,26 @@
+# Parity cases for `ha available-updates`.
+== available-updates
+response: data:{"available_updates":[{"update_type":"core","panel_path":"/update-available/core","version_latest":"2025.11.2"},{"update_type":"addon","name":"SSH","icon":"/addons/core_ssh/icon","panel_path":"/update-available/core_ssh","version_latest":"9.20"}]}
+== updates
+response: data
+== available_updates --raw-json
+response: data
+== available-updates (empty data)
+args: available-updates
+== available-updates --help
+== help available-updates
+== available-updates extra
+== available-updates --bogus
+== available-updates error
+args: available-updates
+response: error:400:System not ready
+== available-updates 500 text
+args: available-updates
+response: text:500
+== available-updates connection refused
+args: available-updates --endpoint 127.0.0.1:1
+== available-updates endpoint with path
+args: available-updates --endpoint http://{endpoint}/api/
+== __complete available-updates ""
+== __complete updates -
+== __complete available

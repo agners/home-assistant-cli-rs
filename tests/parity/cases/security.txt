@@ -1,0 +1,77 @@
+# Parity cases for `ha security`.
+
+== security
+== security --help
+== security bogus
+== secure
+== sec info
+response: data
+== security info --help
+== security integrity --help
+== security options --help
+== help security integrity
+
+# --- info ---
+== security info
+response: data:{"content_trust":true,"pwned":true,"force_security":false}
+== security in
+response: data
+== security inf
+== security info --raw-json
+response: data
+== security info extra
+== security info --bogus
+== security info api error
+args: security info
+response: error
+== security info 403 text
+args: security info
+response: text:403
+== security info connection refused
+args: security info --endpoint 127.0.0.1:1
+
+# --- integrity ---
+== security integrity
+== security int
+response: data:{"supervisor":"pass","core":"pass","plugins":{"audio":"pass","cli":"untested"},"addons":{"core_ssh":"pass"}}
+== security trust
+== security integrity --no-progress
+== security integrity extra
+== security integrity error
+args: security integrity
+response: error:400:Content-Trust is disabled
+== security integrity --raw-json
+response: data:{"supervisor":"pass"}
+
+# --- options ---
+== security options
+== security options --pwned
+== security options --pwned=false
+== security option --pwned=true
+== security opt --force-security
+== security opts --force-security=true
+== security op --force-security=True
+== security options --force-security=false --pwned=0
+== security options --pwned --force-security
+== security options --pwned false
+== security options --pwned=maybe
+== security options --force-security=
+== security options extra
+== security options api error
+args: security options --pwned=false
+response: error:400:Nope
+== security options --pwned --raw-json
+response: data:{"a":1}
+
+# --- completion ---
+== __complete security ""
+== __complete security i
+== __complete security info ""
+== __complete security integrity ""
+== __complete security options ""
+== __complete security options -
+== __complete security options --pwned ""
+== __complete security options --pwned=
+== __complete security options --force-security=
+== __complete security options --force-security=t
+== __complete security options --pwned=false -

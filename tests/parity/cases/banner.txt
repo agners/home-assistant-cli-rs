@@ -1,0 +1,170 @@
+# Parity cases for `ha banner`. Format: see tests/parity.py.
+# The Go CLI panics (exit code 2 + goroutine trace on stderr) on unexpected
+# shapes of the network info; those cases compare stdout and exit code only.
+# Not covered: the 3 minute wait when the Supervisor never comes up.
+
+== banner --help
+== help banner
+== banner extra
+== banner --bogus
+== banner --no-wait=maybe
+== __complete banner ""
+== __complete banner -
+== __complete banner --no-wait=
+== __complete banner --no-wait ""
+== __complete ba
+
+# --- --no-wait --------------------------------------------------------------
+== banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== ba --no-wait=true (ssl, default port)
+args: ba --no-wait=true
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":443,"ssl":true}
+== banner --no-wait (ssl, other port)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":true}
+== banner --no-wait (http, default port)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":80,"ssl":false}
+== banner --no-wait (http on 443, ssl not bool)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":443,"ssl":"true"}
+== banner --no-wait (odd core info)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":null,"operating_system":null}
+route: GET /core/info = data:{"version":null,"port":"8123"}
+== banner --no-wait (odd types)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":5,"ipv4":{"address":[1,2.5,true,null,"a",["x",1],{"k":"v","a":1}]},"ipv6":{"address":[1e21,-0.5,1e-7,123456789]}},{"ipv4":null},{"interface":true,"ipv4":null},{"interface":["a",1],"ipv4":null},{"interface":{"b":1,"a":"x"},"ipv4":null}]}
+route: GET /host/info = data:{"hostname":12,"operating_system":true}
+route: GET /core/info = data:{"version":2025.11,"port":8123.9,"ssl":1}
+== banner --no-wait (missing fields)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"x":1}
+route: GET /core/info = data:{"x":1}
+== banner --no-wait (negative port)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"1","port":-1.5}
+== banner --no-wait (long interface name)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"averyveryverylonginterfacename0","ipv4":{"address":["10.0.0.1/8"]},"ipv6":{"address":["fe80::1/64"]}},{"interface":"é","ipv4":{"address":["10.0.0.2/8"]}}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== banner --no-wait (no interfaces key)
+args: banner --no-wait
+route: GET /network/info = data:{"docker":{"interface":"hassio"}}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== banner --no-wait (empty interfaces)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== banner --no-wait (network error)
+args: banner --no-wait
+route: GET /network/info = error:400:Network not ready
+== banner --no-wait (network error without message)
+args: banner --no-wait
+route: GET /network/info = json:{"result":"error"}
+== banner --no-wait (network unknown result)
+args: banner --no-wait
+route: GET /network/info = json:{"result":"weird","message":"m","data":{"interfaces":[]}}
+== banner --no-wait (network 500 text)
+args: banner --no-wait
+route: GET /network/info = text:500
+== banner --no-wait (network 502)
+args: banner --no-wait
+route: GET /network/info = text:502
+== banner --no-wait connection refused
+args: banner --no-wait --endpoint 127.0.0.1:1
+== banner --no-wait --raw-json
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+== banner --no-wait (host error)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = error:400:Host not ready
+== banner --no-wait (host 403 text)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = text:403
+== banner --no-wait (host empty)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+== banner --no-wait (core error)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = error:400:Core not ready
+== banner --no-wait (core empty)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+== banner --no-wait (network empty: go panics)
+args: banner --no-wait
+compare: stdout exit requests
+== banner --no-wait (interfaces not a list: go panics)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":"x"}
+compare: stdout exit requests
+== banner --no-wait (interfaces null: go panics)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":null}
+compare: stdout exit requests
+== banner --no-wait (interface not a map: go panics)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"a","ipv4":null},"x"]}
+compare: stdout exit requests
+== banner --no-wait (ipv4 not a map: go panics)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"a","ipv4":"x"}]}
+compare: stdout exit requests
+== banner --no-wait (ipv4 without address: go panics)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"a","ipv4":{}}]}
+compare: stdout exit requests
+== banner --no-wait (ipv6 address not a list: go panics)
+args: banner --no-wait
+route: GET /network/info = data:{"interfaces":[{"interface":"a","ipv4":{"address":["1.2.3.4/24"]},"ipv6":{"address":5}}]}
+compare: stdout exit requests
+
+# --- waiting for the Supervisor ---------------------------------------------
+== banner
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== ba --no-wait=false
+route: GET /network/info = data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== banner (ready on second try)
+args: banner
+route: GET /network/info = error:400:Starting ;; data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== banner (ready on fourth try)
+args: banner
+route: GET /network/info = text:502 ;; data:{"interfaces":[]} ;; data:{"docker":{}} ;; data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = data:{"hostname":"homeassistant","operating_system":"Home Assistant OS 16.3"}
+route: GET /core/info = data:{"version":"2025.11.1","port":8123,"ssl":false}
+== banner (empty data, then ready)
+args: banner
+route: GET /network/info = ok ;; data:{"interfaces":[{"interface":"end0","ipv4":{"address":["192.168.1.10/24"]},"ipv6":{"address":["fe80::1/64","2001:db8::1/64"]}},{"interface":"wlan0","ipv4":{"address":[]},"ipv6":{"address":[]}},{"interface":"eth1","ipv4":null,"ipv6":null}]}
+route: GET /host/info = error:400:Host not ready
+== banner --raw-json=false (interfaces not a list: go panics)
+args: banner --raw-json=false
+route: GET /network/info = data:{"interfaces":{"a":1}}
+compare: stdout exit requests

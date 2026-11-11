@@ -1,0 +1,211 @@
+# Parity cases for the shared core: root command, cobra/pflag behaviour,
+# configuration resolution, built-in help/completion commands.
+# (Uses `dns` commands as the vehicle, since that group is ported.)
+
+# --- root help and command lookup -------------------------------------------
+== root without args
+args:
+== --help
+== -h
+== help
+== help dns
+== help dns info
+== help bogus
+== help dns bogus
+== help help
+== bogus
+== dnss
+== inf
+== dn
+== --bogus
+== -x
+== --help dns info
+== -h dns
+== dns -h info
+== dns info -h --bogus
+== dns -- info
+== -- dns info
+== dns info --
+== dns "" info
+
+# --- global flags: position, syntax -----------------------------------------
+== --raw-json dns info
+response: data
+== dns --raw-json info
+response: data
+== dns info --raw-json=true
+response: data
+== dns info --raw-json=false
+response: data
+== dns info --raw-json false
+response: data
+== dns info --raw-json=maybe
+== --endpoint {endpoint} dns info
+env: SUPERVISOR_ENDPOINT=127.0.0.1:1
+== --endpoint={endpoint} dns info
+env: SUPERVISOR_ENDPOINT=127.0.0.1:1
+== dns info --endpoint
+== dns info --endpoint http://{endpoint}/
+== dns info --endpoint http://{endpoint}/api/
+== dns info --endpoint {endpoint}/sub/path
+== dns info --endpoint http://{endpoint}//x/../y/
+== dns info --endpoint "{endpoint}/a b"
+== dns info --endpoint "http://[::1"
+compare: stdout exit requests
+== dns info --endpoint host:port
+== dns info --no-progress
+== dns info --no-progress=false --raw-json
+== dns info --api-token ""
+== dns info --api-token "tok en"
+
+# --- configuration: flag > env > config file > default ----------------------
+== raw-json env true
+args: dns info
+response: data:{"a":1}
+env: SUPERVISOR_RAW_JSON=true
+== raw-json env 1
+args: dns info
+response: data:{"a":1}
+env: SUPERVISOR_RAW_JSON=1
+== raw-json env garbage
+args: dns info
+response: data:{"a":1}
+env: SUPERVISOR_RAW_JSON=yes
+== raw-json env true, flag false
+args: dns info --raw-json=false
+response: data:{"a":1}
+env: SUPERVISOR_RAW_JSON=true
+== raw-json env empty
+args: dns info
+response: data:{"a":1}
+env: SUPERVISOR_RAW_JSON=
+== token: SUPERVISOR_API_TOKEN beats SUPERVISOR_TOKEN
+args: dns info
+env: SUPERVISOR_API_TOKEN=api-token-env
+== token: flag beats env
+args: dns info --api-token from-flag
+env: SUPERVISOR_API_TOKEN=api-token-env
+== token: empty SUPERVISOR_API_TOKEN falls back
+args: dns info
+env: SUPERVISOR_API_TOKEN=
+== config file via flag (yaml)
+args: dns info --config {tmp}/cfg.yaml
+unset: SUPERVISOR_ENDPOINT
+unset: SUPERVISOR_TOKEN
+response: data:{"a":1}
+file: cfg.yaml = endpoint: {endpoint}\napi-token: file-token\nraw-json: true\n
+== config file via flag (yml, quoted values, comments)
+args: dns info --config {tmp}/cfg.yml
+unset: SUPERVISOR_ENDPOINT
+unset: SUPERVISOR_TOKEN
+file: cfg.yml = # my config\nendpoint: "{endpoint}"   # dev\napi-token: 'file token'\n
+== config file via flag (json)
+args: dns info --config {tmp}/cfg.json
+unset: SUPERVISOR_ENDPOINT
+unset: SUPERVISOR_TOKEN
+file: cfg.json = {"endpoint": "{endpoint}", "api-token": "json-token", "raw-json": true}
+== config file: env beats file
+args: dns info --config {tmp}/cfg.yaml
+file: cfg.yaml = endpoint: 127.0.0.1:1\napi-token: file-token\n
+== config file: flag beats file
+args: dns info --config {tmp}/cfg.yaml --api-token flag-token
+unset: SUPERVISOR_TOKEN
+file: cfg.yaml = api-token: file-token\n
+== config file missing
+args: dns info --config {tmp}/nope.yaml
+== config file in HOME (yaml)
+args: dns info
+env: HOME={tmp}
+unset: SUPERVISOR_TOKEN
+file: .homeassistant.yaml = api-token: home-token\n
+== config file in HOME (yml)
+args: dns info
+env: HOME={tmp}
+unset: SUPERVISOR_TOKEN
+file: .homeassistant.yml = api-token: home-token-yml\n
+== config file in HOME (json)
+args: dns info
+env: HOME={tmp}
+unset: SUPERVISOR_TOKEN
+file: .homeassistant.json = {"api-token": "home-json"}
+== SUPERVISOR_CONFIG env is not used to locate the file
+args: dns info
+env: SUPERVISOR_CONFIG={tmp}/cfg.yaml
+unset: SUPERVISOR_TOKEN
+file: cfg.yaml = api-token: file-token\n
+== config file uppercase keys and bool as number
+args: dns info --config {tmp}/cfg.yaml
+unset: SUPERVISOR_TOKEN
+response: data:{"a":1}
+file: cfg.yaml = API-TOKEN: upper\nRaw-Json: 1\n
+== log level debug (stdout/requests only)
+args: dns info --log-level debug
+compare: stdout exit requests
+== log level garbage
+args: dns info --log-level nonsense
+== log level env error
+args: dns info
+env: SUPERVISOR_LOG_LEVEL=error
+
+# --- built-in completion command --------------------------------------------
+== completion
+== completion --help
+== completion bogus
+== completion bash
+== completion bash --no-descriptions
+== completion bash --help
+== completion bash extra
+== completion zsh
+== completion zsh --no-descriptions
+== completion zsh --help
+== completion fish
+== completion fish --no-descriptions
+== completion fish --help
+== completion powershell
+== completion powershell --no-descriptions
+== completion powershell --help
+
+# --- __complete protocol ----------------------------------------------------
+== __complete
+== __complete ""
+== __complete d
+== __complete -
+== __complete --
+== __complete --l
+== __complete --config ""
+== __complete --config=
+== __complete --log-level ""
+== __complete --log-level=W
+== __complete --endpoint ""
+== __complete --raw-json=
+== __complete --raw-json ""
+== __complete help ""
+== __complete help d
+== __complete help dns ""
+== __complete help dns i
+== __complete completion ""
+== __complete completion bash ""
+== __complete completion bash -
+== __complete bogus ""
+== __complete dns --bogus ""
+== __complete dns info --bogus=
+== __complete dns info -- ""
+== __complete dns info -- -
+== __complete dns info --help ""
+== __complete dns options --raw-json -
+== __completeNoDesc ""
+== __completeNoDesc dns options -
+== __complete descriptions disabled by env
+args: __complete dns ""
+env: HA_COMPLETION_DESCRIPTIONS=0
+== __complete descriptions disabled by COBRA env
+args: __complete dns ""
+env: COBRA_COMPLETION_DESCRIPTIONS=false
+== __complete with endpoint flag
+args: __complete --endpoint {endpoint} dns logs --boot ""
+env: SUPERVISOR_ENDPOINT=127.0.0.1:1
+response: data:{"boots":{"0":"abc"}}
+== __complete ignores raw-json
+args: __complete dns logs --boot ""
+env: SUPERVISOR_RAW_JSON=true
+response: data:{"boots":{"0":"abc"}}

@@ -1,0 +1,222 @@
+# Parity cases for `ha multicast`. Format: see tests/parity.py.
+
+# --- help / tree ---
+== multicast
+== multicast --help
+== multicast bogus
+== help multicast
+== multicast info --help
+== multicast logs --help
+== multicast options --help
+== multicast restart --help
+== multicast stats --help
+== multicast update --help
+== __complete multicast ""
+== __completeNoDesc multicast ""
+== mcast info
+response: data
+== mc stats
+response: data
+# --- info ---
+== multicast info
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== multicast in
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== multicast inf
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== multicast info (empty data)
+args: multicast info
+== multicast info --raw-json
+response: data:{"version":"2025.08.0","version_latest":"2025.09.0","update_available":true}
+== multicast info extra
+== multicast info --bogus
+== multicast info api error
+args: multicast info
+response: error:400:Something failed
+== multicast info api error raw json
+args: multicast info --raw-json
+response: error
+== multicast info 500 text
+args: multicast info
+response: text:500
+== multicast info connection refused
+args: multicast info --endpoint 127.0.0.1:1
+== __complete multicast info ""
+== __complete multicast info -
+# --- stats ---
+== multicast stats
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== multicast status
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== multicast stat
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== multicast stats (empty data)
+args: multicast stats
+== multicast stats --raw-json
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== multicast stats extra
+== multicast stats --bogus
+== multicast stats api error
+args: multicast stats
+response: error:400:Something failed
+== multicast stats api error raw json
+args: multicast stats --raw-json
+response: error
+== multicast stats 500 text
+args: multicast stats
+response: text:500
+== multicast stats connection refused
+args: multicast stats --endpoint 127.0.0.1:1
+== __complete multicast stats ""
+== __complete multicast stats -
+# --- logs ---
+== multicast logs
+response: logs
+== multicast log --follow
+response: logs
+== multicast lg -f -n 100
+response: logs
+== multicast logs --lines 1
+response: logs
+== multicast logs -n0
+response: logs
+== multicast logs --boot -1
+response: logs
+== multicast logs -b 2 -f -v
+response: logs
+== multicast logs --boot "a b/c" --verbose
+response: logs
+== multicast logs -fvn5
+response: logs
+== multicast logs --follow=false --verbose=true
+response: logs
+== multicast logs --follow false
+== multicast logs --lines x
+== multicast logs --lines -1
+== multicast logs --lines
+== multicast logs -x
+== multicast logs -b
+== multicast logs extra
+== multicast logs error status
+args: multicast logs
+response: text:500:boom\n
+== multicast logs json error body
+args: multicast logs
+response: error:400:No such boot
+== multicast logs connection refused
+args: multicast logs --endpoint 127.0.0.1:1
+== __complete multicast logs ""
+== __complete multicast logs -
+== __complete multicast logs --follow=
+== __complete multicast logs --lines ""
+== __complete multicast logs --verbose ""
+== __complete multicast logs --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete multicast logs -b a
+response: data:{"boots":{"0":"abcdef","-1":"bcdefa"}}
+== __complete multicast logs --boot= (api error)
+args: __complete multicast logs --boot=
+response: error
+# --- restart ---
+== multicast restart
+== multicast reboot
+== multicast restart data response
+args: multicast restart
+response: data:{"job_id":"abc"}
+== multicast restart --raw-json
+== multicast restart --no-progress
+== multicast restart extra
+== multicast restart --bogus
+== multicast restart api error
+args: multicast restart
+response: error:400:Something failed
+== multicast restart api error raw json
+args: multicast restart --raw-json
+response: error
+== multicast restart 502
+args: multicast restart
+response: text:502
+== multicast restart connection refused
+args: multicast restart --endpoint 127.0.0.1:1
+== __complete multicast restart ""
+== __complete multicast restart -
+# --- update ---
+== multicast update
+== multicast upgrade
+== multicast downgrade
+== multicast up
+== multicast down
+== multicast update data response
+args: multicast update
+response: data:{"job_id":"abc"}
+== multicast update --raw-json
+== multicast update --no-progress
+== multicast update extra
+== multicast update --bogus
+== multicast update api error
+args: multicast update
+response: error:400:Something failed
+== multicast update api error raw json
+args: multicast update --raw-json
+response: error
+== multicast update 502
+args: multicast update
+response: text:502
+== multicast update connection refused
+args: multicast update --endpoint 127.0.0.1:1
+== __complete multicast update ""
+== __complete multicast update -
+== multicast update --version 2025.08.0
+== multicast upgrade --version=5
+== multicast downgrade --version ""
+== multicast down --version
+== multicast update --version 1 --version 2
+== multicast update version error
+args: multicast update --version 1
+response: error:400:Version 1 not found
+== multicast update --raw-json --version 3
+response: data:{"a":1}
+== __complete multicast update --version ""
+== __complete multicast update --ver
+# --- options ---
+== multicast options
+== multicast option
+== multicast opt
+== multicast opts
+== multicast op
+== multicast options data response
+args: multicast options
+response: data:{"job_id":"abc"}
+== multicast options --raw-json
+== multicast options --no-progress
+== multicast options extra
+== multicast options --bogus
+== multicast options api error
+args: multicast options
+response: error:400:Something failed
+== multicast options api error raw json
+args: multicast options --raw-json
+response: error
+== multicast options 502
+args: multicast options
+response: text:502
+== multicast options connection refused
+args: multicast options --endpoint 127.0.0.1:1
+== __complete multicast options ""
+== __complete multicast options -
+== multicast options --enabled
+== multicast options --enabled=false
+== multicast options --enabled=true
+== multicast options --enabled=0
+== multicast options --enabled false
+== multicast options --enabled=maybe
+== multicast options --enabled=
+== multicast options --enabled=false --enabled=true
+== multicast options enabled error
+args: multicast options --enabled=false
+response: error:400:Not allowed
+== multicast options --enabled=false --raw-json
+== __complete multicast options --enabled ""
+== __complete multicast options --enabled=
+== __complete multicast options --enabled=f
+== __complete multicast options --en

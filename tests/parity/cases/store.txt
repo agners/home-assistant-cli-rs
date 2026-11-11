@@ -1,0 +1,238 @@
+# Parity cases for `ha store`. Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== store --help
+== help store
+== store apps --help
+== store apps install --help
+== store apps update --help
+== store reload --help
+== store add --help
+== store delete --help
+== store repair --help
+== help store apps update
+== store --bogus
+
+# --- store ------------------------------------------------------------------
+== store
+response: file:apps_store.json
+== shop
+response: data
+== stor
+== store bogus
+== store bogus extra
+== store --raw-json
+response: file:apps_store.json
+== store api error
+args: store
+response: error
+== store 500 text
+args: store
+response: text:500
+== store connection refused
+args: store --endpoint 127.0.0.1:1
+== store repositories
+
+# --- store apps and deprecated aliases --------------------------------------
+== store apps
+response: data:{"addons":[{"name":"Samba","slug":"core_samba","available":true,"installed":false}]}
+== store app
+response: data
+== store addons
+response: data
+== store add-on
+== store addon
+== store add-ons
+== store ad
+== store apps bogus
+== store apps --raw-json
+response: data
+== store apps api error
+args: store apps
+response: error
+== store addons install core_ssh
+== store addon update addons
+== store apps install add-on
+== store apps install ad
+== store addons --help
+== store add-ons install --help
+== store addons install
+== shop addons
+== store add addons
+== store delete addon
+== __complete store addons ""
+== __complete store addons install ""
+response: file:apps_store.json
+
+# --- store apps install -----------------------------------------------------
+== store apps install core_ssh
+== store apps i core_ssh
+response: data:{"job_id":"abc"}
+== store apps inst core_ssh --no-progress
+== store apps install
+== store apps install a b
+== store apps install "a b/c"
+== store apps install error
+args: store apps install core_ssh
+response: error:400:App core_ssh is already installed
+== store apps install --raw-json core_ssh
+== store apps install 500
+args: store apps install core_ssh
+response: text:500
+== store apps install connection refused
+args: store apps install core_ssh --endpoint 127.0.0.1:1
+
+# --- store apps update ------------------------------------------------------
+== store apps update core_ssh
+== store apps upgrade core_ssh --backup
+== store apps up core_ssh --backup=true
+== store apps update core_ssh --backup=false
+== store apps update --backup core_ssh
+== store apps update core_ssh --backup false
+== store apps update core_ssh --backup=maybe
+== store apps update core_ssh --version 1
+== store apps update
+== store apps update --backup
+== store apps update a b
+== store apps update error
+args: store apps update core_ssh
+response: error:400:No update available for app core_ssh
+== store apps update --raw-json core_ssh --backup
+response: data:{"job_id":"abc"}
+== store apps update connection refused
+args: store apps update core_ssh --endpoint 127.0.0.1:1
+== store apps update bad endpoint
+args: store apps update core_ssh --endpoint "bad host"
+
+# --- reload -----------------------------------------------------------------
+== store reload
+== store refresh
+== store re
+response: data
+== store reload extra
+== store reload --bogus
+== store reload error
+args: store reload
+response: error:400:Can't reload store
+== store reload --raw-json
+== store reload --no-progress
+== store reload connection refused
+args: store reload --endpoint 127.0.0.1:1
+
+# --- add --------------------------------------------------------------------
+== store add https://github.com/home-assistant/addons-example
+== store set https://example.com/repo
+== store new "https://example.com/a b?c=<d>&e"
+== store add ""
+== store add
+== store add a b
+== store add error
+args: store add https://example.com/nope
+response: error:400:Repository is not a valid app repository
+== store add --raw-json https://example.com/repo
+response: data
+== store add connection refused
+args: store add x --endpoint 127.0.0.1:1
+== store add bad endpoint
+args: store add x --endpoint "bad host"
+
+# --- delete -----------------------------------------------------------------
+== store delete 94cfad5a
+== store del 94cfad5a
+== store remove 94cfad5a
+response: data
+== store delete "a b/c"
+== store delete
+== store delete a b
+== store delete error
+args: store delete core
+response: error:400:Can't remove built-in repositories
+== store delete 404
+args: store delete nope
+response: error:404:Not found
+== store delete --raw-json 94cfad5a
+== store delete empty 200
+args: store delete 94cfad5a
+response: empty:200
+== store delete connection refused
+args: store delete x --endpoint 127.0.0.1:1
+== store delete bad endpoint
+args: store delete x --endpoint "bad host"
+== store delete with stdin
+args: store delete 94cfad5a
+stdin: n\n
+
+# --- repair -----------------------------------------------------------------
+== store repair 94cfad5a
+== store reset 94cfad5a
+response: data
+== store repair
+== store repair a b
+== store repair error
+args: store repair nope
+response: error:400:Repository nope does not exist
+== store repair --raw-json 94cfad5a
+== store repair connection refused
+args: store repair x --endpoint 127.0.0.1:1
+
+# --- completion -------------------------------------------------------------
+== __complete store ""
+== __complete store re
+== __complete shop ""
+== __completeNoDesc store ""
+== __complete store -
+== __complete store apps ""
+== __complete store apps -
+== __complete store apps install ""
+response: file:apps_store.json
+== __complete store apps i c
+response: file:apps_store.json
+== __complete store apps install a ""
+response: file:apps_store.json
+== __completeNoDesc store apps install ""
+response: file:apps_store.json
+== __complete store apps update ""
+response: file:apps_store.json
+== __complete store apps up ""
+response: file:apps_store.json
+== __complete store apps update -
+== __complete store apps update x --backup=
+== __complete store apps update x --backup ""
+== __complete store apps install (api error)
+args: __complete store apps install ""
+response: error
+== __complete store apps install (no addons)
+args: __complete store apps install ""
+== __complete store apps update (connection refused)
+args: __complete store apps update "" --endpoint 127.0.0.1:1
+== __complete store reload ""
+== __complete store add ""
+== __complete store add x ""
+== __complete store delete ""
+response: file:apps_store.json
+== __complete store del 9
+response: file:apps_store.json
+== __complete store delete x ""
+response: file:apps_store.json
+== __completeNoDesc store delete ""
+response: file:apps_store.json
+== __complete store repair ""
+response: file:apps_store.json
+== __complete store reset ""
+response: file:apps_store.json
+== __complete store delete (api error)
+args: __complete store delete ""
+response: error
+== __complete store delete (error result with 200)
+args: __complete store delete ""
+response: json:{"result":"error","data":{"repositories":[{"slug":"a"}]}}
+== __complete store delete (repositories not a list)
+args: __complete store delete ""
+response: data:{"repositories":{"slug":"a"}}
+== __complete store delete (no repositories)
+args: __complete store delete ""
+== __complete store repair (text)
+args: __complete store repair ""
+response: text:200
+== __complete store repair (connection refused)
+args: __complete store repair "" --endpoint 127.0.0.1:1

@@ -1,0 +1,549 @@
+# Parity cases for `ha audio`. Format: see tests/parity.py.
+
+# --- help / tree ---
+== audio
+== audio --help
+== audio bogus
+== help audio
+== audio default --help
+== audio default input --help
+== audio default output --help
+== audio info --help
+== audio logs --help
+== audio profile --help
+== audio reload --help
+== audio restart --help
+== audio stats --help
+== audio update --help
+== audio volume --help
+== audio volume input --help
+== audio volume output --help
+== __complete audio ""
+== __completeNoDesc audio ""
+== snd info
+response: data
+== sound stats
+response: data
+== audio default
+== audio default bogus
+== audio volume
+== audio volume bogus
+== audio vol
+== audio def
+== help audio volume input
+== help audio default out
+== __complete audio default ""
+== __complete audio volume ""
+== __complete audio volume o
+== __complete audio snd ""
+== __complete audio de i
+# --- info ---
+== audio info
+response: data:{"host":"172.30.32.4","version":"2025.08.0","version_latest":"2025.08.0","update_available":false,"audio":{"card":[{"name":"alsa_card.pci","index":0,"driver":"module-alsa-card.c","profiles":[{"name":"output:analog-stereo","description":"Analog Stereo Output","active":true}]}],"input":[{"name":"alsa_input.pci","index":0,"description":"Built-in Audio","volume":0.4,"mute":false,"default":true,"card":0,"applications":[]}],"output":[],"application":[]}}
+== audio in
+response: data:{"host":"172.30.32.4","version":"2025.08.0","version_latest":"2025.08.0","update_available":false,"audio":{"card":[{"name":"alsa_card.pci","index":0,"driver":"module-alsa-card.c","profiles":[{"name":"output:analog-stereo","description":"Analog Stereo Output","active":true}]}],"input":[{"name":"alsa_input.pci","index":0,"description":"Built-in Audio","volume":0.4,"mute":false,"default":true,"card":0,"applications":[]}],"output":[],"application":[]}}
+== audio inf
+response: data:{"host":"172.30.32.4","version":"2025.08.0","version_latest":"2025.08.0","update_available":false,"audio":{"card":[{"name":"alsa_card.pci","index":0,"driver":"module-alsa-card.c","profiles":[{"name":"output:analog-stereo","description":"Analog Stereo Output","active":true}]}],"input":[{"name":"alsa_input.pci","index":0,"description":"Built-in Audio","volume":0.4,"mute":false,"default":true,"card":0,"applications":[]}],"output":[],"application":[]}}
+== audio info (empty data)
+args: audio info
+== audio info --raw-json
+response: data:{"host":"172.30.32.4","version":"2025.08.0","version_latest":"2025.08.0","update_available":false,"audio":{"card":[{"name":"alsa_card.pci","index":0,"driver":"module-alsa-card.c","profiles":[{"name":"output:analog-stereo","description":"Analog Stereo Output","active":true}]}],"input":[{"name":"alsa_input.pci","index":0,"description":"Built-in Audio","volume":0.4,"mute":false,"default":true,"card":0,"applications":[]}],"output":[],"application":[]}}
+== audio info extra
+== audio info --bogus
+== audio info api error
+args: audio info
+response: error:400:Something failed
+== audio info api error raw json
+args: audio info --raw-json
+response: error
+== audio info 500 text
+args: audio info
+response: text:500
+== audio info connection refused
+args: audio info --endpoint 127.0.0.1:1
+== __complete audio info ""
+== __complete audio info -
+# --- stats ---
+== audio stats
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== audio status
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== audio stat
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== audio st
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== audio stats (empty data)
+args: audio stats
+== audio stats --raw-json
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== audio stats extra
+== audio stats --bogus
+== audio stats api error
+args: audio stats
+response: error:400:Something failed
+== audio stats api error raw json
+args: audio stats --raw-json
+response: error
+== audio stats 500 text
+args: audio stats
+response: text:500
+== audio stats connection refused
+args: audio stats --endpoint 127.0.0.1:1
+== __complete audio stats ""
+== __complete audio stats -
+# --- logs ---
+== audio logs
+response: logs
+== audio log --follow
+response: logs
+== audio lg -f -n 100
+response: logs
+== audio logs --lines 1
+response: logs
+== audio logs -n0
+response: logs
+== audio logs --boot -1
+response: logs
+== audio logs -b 2 -f -v
+response: logs
+== audio logs --boot "a b/c" --verbose
+response: logs
+== audio logs -fvn5
+response: logs
+== audio logs --follow=false --verbose=true
+response: logs
+== audio logs --follow false
+== audio logs --lines x
+== audio logs --lines -1
+== audio logs --lines
+== audio logs -x
+== audio logs -b
+== audio logs extra
+== audio logs error status
+args: audio logs
+response: text:500:boom\n
+== audio logs json error body
+args: audio logs
+response: error:400:No such boot
+== audio logs connection refused
+args: audio logs --endpoint 127.0.0.1:1
+== __complete audio logs ""
+== __complete audio logs -
+== __complete audio logs --follow=
+== __complete audio logs --lines ""
+== __complete audio logs --verbose ""
+== __complete audio logs --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete audio logs -b a
+response: data:{"boots":{"0":"abcdef","-1":"bcdefa"}}
+== __complete audio logs --boot= (api error)
+args: __complete audio logs --boot=
+response: error
+# --- reload ---
+== audio reload
+== audio refresh
+== audio re
+== audio reload data response
+args: audio reload
+response: data:{"job_id":"abc"}
+== audio reload --raw-json
+== audio reload --no-progress
+== audio reload extra
+== audio reload --bogus
+== audio reload api error
+args: audio reload
+response: error:400:Something failed
+== audio reload api error raw json
+args: audio reload --raw-json
+response: error
+== audio reload 502
+args: audio reload
+response: text:502
+== audio reload connection refused
+args: audio reload --endpoint 127.0.0.1:1
+== __complete audio reload ""
+== __complete audio reload -
+# --- restart ---
+== audio restart
+== audio reboot
+== audio restart data response
+args: audio restart
+response: data:{"job_id":"abc"}
+== audio restart --raw-json
+== audio restart --no-progress
+== audio restart extra
+== audio restart --bogus
+== audio restart api error
+args: audio restart
+response: error:400:Something failed
+== audio restart api error raw json
+args: audio restart --raw-json
+response: error
+== audio restart 502
+args: audio restart
+response: text:502
+== audio restart connection refused
+args: audio restart --endpoint 127.0.0.1:1
+== __complete audio restart ""
+== __complete audio restart -
+# --- update ---
+== audio update
+== audio upgrade
+== audio downgrade
+== audio up
+== audio down
+== audio update data response
+args: audio update
+response: data:{"job_id":"abc"}
+== audio update --raw-json
+== audio update --no-progress
+== audio update extra
+== audio update --bogus
+== audio update api error
+args: audio update
+response: error:400:Something failed
+== audio update api error raw json
+args: audio update --raw-json
+response: error
+== audio update 502
+args: audio update
+response: text:502
+== audio update connection refused
+args: audio update --endpoint 127.0.0.1:1
+== __complete audio update ""
+== __complete audio update -
+== audio update --version 2025.08.0
+== audio upgrade --version=5
+== audio downgrade --version ""
+== audio down --version
+== audio update --version 1 --version 2
+== audio update version error
+args: audio update --version 1
+response: error:400:Version 1 not found
+== audio update --raw-json --version 3
+response: data:{"a":1}
+== __complete audio update --version ""
+== __complete audio update --ver
+# --- profile ---
+== audio profile
+== audio pro
+== audio profile data response
+args: audio profile
+response: data:{"job_id":"abc"}
+== audio profile --raw-json
+== audio profile --no-progress
+== audio profile extra
+== audio profile --bogus
+== audio profile api error
+args: audio profile
+response: error:400:Something failed
+== audio profile api error raw json
+args: audio profile --raw-json
+response: error
+== audio profile 502
+args: audio profile
+response: text:502
+== audio profile connection refused
+args: audio profile --endpoint 127.0.0.1:1
+== __complete audio profile ""
+== __complete audio profile -
+== audio profile --card c1 --name p1
+== audio profile --name p1 --card c1
+== audio profile --name p1
+== audio profile --card c1
+== audio profile --card c1 --name ""
+== audio profile --card "" --name p1
+== audio profile --card "" --name ""
+== audio profile --card=c1 --name=p1 --raw-json
+== audio profile --card --name
+== audio profile --card c1 --name p1 extra
+== audio profile --card c1 --card c2 --name p1
+== audio profile --card "x y" --name "output:analog-stereo"
+== audio profile pro --card c --name n
+== audio profile flags error
+args: audio profile --card c1 --name p1
+response: error:400:Unknown profile
+== __complete audio profile --card ""
+== __complete audio profile --name ""
+== __complete audio profile --card c -
+== __complete audio profile -
+# --- default input ---
+== audio default input
+== audio default in
+== audio def input
+== audio de in
+== audio standard input
+== audio std in
+== audio default input data response
+args: audio default input
+response: data:{"job_id":"abc"}
+== audio default input --raw-json
+== audio default input --no-progress
+== audio default input extra
+== audio default input --bogus
+== audio default input api error
+args: audio default input
+response: error:400:Something failed
+== audio default input api error raw json
+args: audio default input --raw-json
+response: error
+== audio default input 502
+args: audio default input
+response: text:502
+== audio default input connection refused
+args: audio default input --endpoint 127.0.0.1:1
+== __complete audio default input ""
+== __complete audio default input -
+== audio default input --name alsa_input.pci
+== audio default input --name=dev
+== audio default input --name ""
+== audio default input --name
+== audio default input --name "a b\"c<>&"
+== audio default input --name a --name b
+== audio default input --name a --name ""
+== audio default input --name dev --raw-json
+== audio default input --name dev extra
+== audio default input --nam dev
+== audio default input name error
+args: audio default input --name nope
+response: error:400:Unknown device
+== __complete audio default input --name ""
+== __complete audio default input --name=
+== __complete audio default input --n
+== __complete audio default input --name x -
+# --- default output ---
+== audio default output
+== audio default out
+== audio def output
+== audio de out
+== audio standard output
+== audio std out
+== audio default output data response
+args: audio default output
+response: data:{"job_id":"abc"}
+== audio default output --raw-json
+== audio default output --no-progress
+== audio default output extra
+== audio default output --bogus
+== audio default output api error
+args: audio default output
+response: error:400:Something failed
+== audio default output api error raw json
+args: audio default output --raw-json
+response: error
+== audio default output 502
+args: audio default output
+response: text:502
+== audio default output connection refused
+args: audio default output --endpoint 127.0.0.1:1
+== __complete audio default output ""
+== __complete audio default output -
+== audio default output --name alsa_input.pci
+== audio default output --name=dev
+== audio default output --name ""
+== audio default output --name
+== audio default output --name "a b\"c<>&"
+== audio default output --name a --name b
+== audio default output --name a --name ""
+== audio default output --name dev --raw-json
+== audio default output --name dev extra
+== audio default output --nam dev
+== audio default output name error
+args: audio default output --name nope
+response: error:400:Unknown device
+== __complete audio default output --name ""
+== __complete audio default output --name=
+== __complete audio default output --n
+== __complete audio default output --name x -
+# --- volume input ---
+== audio volume input
+== audio volume in
+== audio vol input
+== audio sound in
+== audio snd input
+== audio volume input data response
+args: audio volume input
+response: data:{"job_id":"abc"}
+== audio volume input --raw-json
+== audio volume input --no-progress
+== audio volume input extra
+== audio volume input --bogus
+== audio volume input api error
+args: audio volume input
+response: error:400:Something failed
+== audio volume input api error raw json
+args: audio volume input --raw-json
+response: error
+== audio volume input 502
+args: audio volume input
+response: text:502
+== audio volume input connection refused
+args: audio volume input --endpoint 127.0.0.1:1
+== __complete audio volume input ""
+== __complete audio volume input -
+== audio volume input --index 1
+== audio volume input --index 0
+== audio volume input --index=2 --volume 75
+== audio volume input --index 1 --volume 0
+== audio volume input --index 1 --volume 100
+== audio volume input --index 1 --volume 1
+== audio volume input --index 1 --volume 33
+== audio volume input --index 1 --volume 7
+== audio volume input --index 1 --volume 150
+== audio volume input --index 1 --volume -20
+== audio volume input --index 1 --volume 9223372036854775807
+== audio volume input --index 1 --volume 123456789012345678
+== audio volume input --index 1 --volume 100000000000000000000000
+== audio volume input --index 1 --volume 0x20
+== audio volume input --index 1 --volume x
+== audio volume input --index 1 --volume 1.5
+== audio volume input --index 1 --volume
+== audio volume input --volume 50
+== audio volume input --index -3 --volume 10
+== audio volume input --index x
+== audio volume input --index
+== audio volume input --index 9223372036854775808
+== audio volume input --index 1 --index 2
+== audio volume input --index 1 --mute
+== audio volume input --index 1 --mute=true
+== audio volume input --index 1 --mute=false
+== audio volume input --index 1 --mute false
+== audio volume input --index 1 --unmute
+== audio volume input --index 1 --unmute=true
+== audio volume input --index 1 --unmute=false
+== audio volume input --index 1 --mute --unmute
+== audio volume input --index 1 --mute=false --unmute
+== audio volume input --index 1 --mute --unmute=false
+== audio volume input --index 1 --mute=false --unmute=false
+== audio volume input --index 1 --unmute --mute
+== audio volume input --index 1 --mute --volume 30
+== audio volume input --index 1 --unmute=false --volume 30
+== audio volume input --index 1 --application
+== audio volume input --index 1 --application=true --volume 50
+== audio volume input --index 1 --application=false --volume 50
+== audio volume input --index 1 --mute --application
+== audio volume input --index 1 --unmute --application
+== audio volume input --index 1 --mute=false --application
+== audio volume input --index 1 --mute --application=false
+== audio volume input --index 1 --mute=x
+== audio volume input --index 1 --application=x
+== audio volume input --mute
+== audio volume input --application --unmute --volume 5
+== audio volume input --index 3 --volume 20 --raw-json
+== audio volume input flags error
+args: audio volume input --index 99 --volume 10
+response: error:400:Invalid index
+== audio volume input mute error
+args: audio volume input --index 99 --mute --application
+response: error:400:Invalid application
+== __complete audio volume input --application ""
+== __complete audio volume input --application=
+== __complete audio volume input --index ""
+== __complete audio volume input --volume ""
+== __complete audio volume input --volume=
+== __complete audio volume input --volume 1
+== __complete audio volume input --volume=10
+== __complete audio volume input --volume x
+== __complete audio volume input --mute ""
+== __complete audio volume input --mute=t
+== __complete audio volume input --unmute ""
+== __complete audio volume input --unmute=
+== __complete audio volume input --index 1 -
+== __complete audio volume input --vol
+== __completeNoDesc audio volume input --volume 9
+# --- volume output ---
+== audio volume output
+== audio volume out
+== audio vol output
+== audio sound out
+== audio snd output
+== audio volume output data response
+args: audio volume output
+response: data:{"job_id":"abc"}
+== audio volume output --raw-json
+== audio volume output --no-progress
+== audio volume output extra
+== audio volume output --bogus
+== audio volume output api error
+args: audio volume output
+response: error:400:Something failed
+== audio volume output api error raw json
+args: audio volume output --raw-json
+response: error
+== audio volume output 502
+args: audio volume output
+response: text:502
+== audio volume output connection refused
+args: audio volume output --endpoint 127.0.0.1:1
+== __complete audio volume output ""
+== __complete audio volume output -
+== audio volume output --index 1
+== audio volume output --index 0
+== audio volume output --index=2 --volume 75
+== audio volume output --index 1 --volume 0
+== audio volume output --index 1 --volume 100
+== audio volume output --index 1 --volume 1
+== audio volume output --index 1 --volume 33
+== audio volume output --index 1 --volume 7
+== audio volume output --index 1 --volume 150
+== audio volume output --index 1 --volume -20
+== audio volume output --index 1 --volume 9223372036854775807
+== audio volume output --index 1 --volume 123456789012345678
+== audio volume output --index 1 --volume 100000000000000000000000
+== audio volume output --index 1 --volume 0x20
+== audio volume output --index 1 --volume x
+== audio volume output --index 1 --volume 1.5
+== audio volume output --index 1 --volume
+== audio volume output --volume 50
+== audio volume output --index -3 --volume 10
+== audio volume output --index x
+== audio volume output --index
+== audio volume output --index 9223372036854775808
+== audio volume output --index 1 --index 2
+== audio volume output --index 1 --mute
+== audio volume output --index 1 --mute=true
+== audio volume output --index 1 --mute=false
+== audio volume output --index 1 --mute false
+== audio volume output --index 1 --unmute
+== audio volume output --index 1 --unmute=true
+== audio volume output --index 1 --unmute=false
+== audio volume output --index 1 --mute --unmute
+== audio volume output --index 1 --mute=false --unmute
+== audio volume output --index 1 --mute --unmute=false
+== audio volume output --index 1 --mute=false --unmute=false
+== audio volume output --index 1 --unmute --mute
+== audio volume output --index 1 --mute --volume 30
+== audio volume output --index 1 --unmute=false --volume 30
+== audio volume output --index 1 --application
+== audio volume output --index 1 --application=true --volume 50
+== audio volume output --index 1 --application=false --volume 50
+== audio volume output --index 1 --mute --application
+== audio volume output --index 1 --unmute --application
+== audio volume output --index 1 --mute=false --application
+== audio volume output --index 1 --mute --application=false
+== audio volume output --index 1 --mute=x
+== audio volume output --index 1 --application=x
+== audio volume output --mute
+== audio volume output --application --unmute --volume 5
+== audio volume output --index 3 --volume 20 --raw-json
+== audio volume output flags error
+args: audio volume output --index 99 --volume 10
+response: error:400:Invalid index
+== audio volume output mute error
+args: audio volume output --index 99 --mute --application
+response: error:400:Invalid application
+== __complete audio volume output --application ""
+== __complete audio volume output --application=
+== __complete audio volume output --index ""
+== __complete audio volume output --volume ""
+== __complete audio volume output --volume=
+== __complete audio volume output --volume 1
+== __complete audio volume output --volume=10
+== __complete audio volume output --volume x
+== __complete audio volume output --mute ""
+== __complete audio volume output --mute=t
+== __complete audio volume output --unmute ""
+== __complete audio volume output --unmute=
+== __complete audio volume output --index 1 -
+== __complete audio volume output --vol
+== __completeNoDesc audio volume output --volume 9

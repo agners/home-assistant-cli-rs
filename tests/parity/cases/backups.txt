@@ -1,0 +1,330 @@
+# Parity cases for `ha backups`.
+
+# --- group: help, aliases, deprecated aliases, bare command (= info) ---
+== backups --help
+== help backups
+== backups
+response: data:{"backups":[{"slug":"c1a07617","name":"Full","date":"2025-11-01T10:00:00+00:00","type":"full","size":12.5,"protected":false,"compressed":true,"location":null,"locations":[null],"content":{"homeassistant":true,"addons":["core_ssh"],"folders":["ssl"]}}],"days_until_stale":30,"supervisor_internal_backups":false}
+== backup
+response: data
+== back
+== bk
+== snapshots
+response: data
+== snapshot
+== snap
+== shot
+== sn
+== sn new
+== snapshots sn info abc
+== backups bogus
+response: data
+== backups --raw-json
+response: data
+== backups --bogus
+== backups api error
+args: backups
+response: error
+== backups 500 text
+args: backups
+response: text:500
+== backups connection refused
+args: backups --endpoint 127.0.0.1:1
+== backups freeze --help
+== backups info --help
+== backups new --help
+== backups options --help
+== backups reload --help
+== backups remove --help
+== backups restore --help
+== backups thaw --help
+== snapshot new --help
+
+# --- freeze / thaw ---
+== backups freeze
+== backups frz
+== backups freeze --timeout 300
+== backups freeze --timeout=0
+== backups freeze --timeout -5
+== backups freeze --timeout x
+== backups freeze --timeout
+== backups freeze extra
+== backups freeze error
+args: backups freeze --timeout 10
+response: error:400:Already frozen
+== backups freeze --timeout 5 --raw-json
+== backups thaw
+== backups th
+== backups thaw extra
+== backups thaw error
+args: backups thaw
+response: error
+== backups thaw --raw-json
+
+# --- info ---
+== backups info c1a07617
+response: data:{"slug":"c1a07617","type":"full","name":"Full","date":"2025-11-01T10:00:00+00:00","size":12.5,"compressed":true,"protected":false,"homeassistant":"2025.11.1","addons":[{"slug":"core_ssh","name":"SSH","version":"1.0","size":0.1}],"repositories":[],"folders":["ssl"]}
+== backups in abc
+== backups inf abc
+response: data
+== backups info
+== backups info a b
+== backups info "a b/c"
+== backups info abc --raw-json
+response: data
+== backups info abc error
+args: backups info abc
+response: error:404:Backup does not exist
+== backups info abc 403
+args: backups info abc
+response: text:403
+== backups info abc connection refused
+args: backups info abc --endpoint 127.0.0.1:1
+== backups info abc bad endpoint
+args: backups info abc --endpoint "bad host"
+
+# --- new ---
+== backups new
+== backups create
+response: data:{"slug":"abcd1234"}
+== backups backup
+== backups new --name "My backup"
+== backups new --name ""
+== backups new --name
+== backups new --password secret
+== backups new --password ""
+== backups new --name n --password p
+== backups new --uncompressed
+== backups new --uncompressed=true
+== backups new --uncompressed=false
+== backups new --uncompressed=maybe
+== backups new --app core_ssh
+== backups new --app core_ssh --app core_mosquitto
+== backups new -a core_ssh -acore_mosquitto
+== backups new --app ""
+== backups new --app "" --app x
+== backups new --app ALL
+== backups new --app
+== backups new --addons core_ssh
+== backups new --addons core_ssh --app core_mosquitto
+== backups new --addons a --addons b
+== backups new --addons ""
+== backups new --folders homeassistant
+== backups new -f ssl -f media
+== backups new --folders ""
+== backups new --folders ssl --app core_ssh
+== backups new --location
+== backups new --location=mount1
+== backups new --location mount1
+== backups new -l
+== backups new -l=mount1
+== backups new -lmount1
+== backups new --location --location=mount1
+== backups new --location=
+== backups new --location=.local --location=a,b
+== backups new --homeassistant-exclude-database
+== backups new --homeassistant-exclude-database=true
+== backups new --homeassistant-exclude-database=false
+== backups new --homeassistant-exclude-database=x
+== backups new --filename backup.tar
+== backups new --filename ""
+== backups new --filename
+== backups new all flags
+args: backups new --name n --password p --uncompressed -a core_ssh -f ssl -l --homeassistant-exclude-database=true --filename f.tar
+== backups new --no-progress
+== backups new extra
+== backups new --bogus
+== backups new error
+args: backups new --name n
+response: error:400:Another job is running
+== backups new 500 text
+args: backups new
+response: text:500
+== backups new --raw-json --name n
+response: data:{"slug":"abcd1234"}
+== backups new connection refused
+args: backups new --endpoint 127.0.0.1:1
+
+# --- options ---
+== backups options
+== backups options --days-until-stale 60
+== backups option --days-until-stale=0
+== backups opt --days_until_stale 7
+== backups opts --days_until_stale=7
+== backups op --days-until-stale -1
+== backups options --days-until-stale 30
+== backups options --days-until-stale x
+== backups options --days-until-stale
+== backups options extra
+== backups options error
+args: backups options --days-until-stale 1
+response: error:400:Invalid
+== backups options --days-until-stale 5 --raw-json
+
+# --- reload ---
+== backups reload
+== backups refresh
+== backups re
+== backups reload extra
+== backups reload error
+args: backups reload
+response: error
+== backups reload --raw-json
+
+# --- remove ---
+== backups remove c1a07617
+== backups delete abc
+== backups del abc
+== backups rem abc
+== backups rm abc
+== backups remove
+== backups remove a b
+== backups remove abc --location
+== backups remove abc -l
+== backups remove abc --location=mount1
+== backups remove abc --location mount1
+== backups remove abc -l=mount1 -l
+== backups remove --location=.local --location=share1 abc
+== backups remove abc --location=
+== backups remove "a b"
+== backups remove abc error
+args: backups remove abc
+response: error:400:Backup does not exist
+== backups remove abc 403
+args: backups remove abc
+response: text:403
+== backups remove abc --raw-json
+== backups remove abc data
+args: backups remove abc
+response: data:{"a":1}
+== backups remove abc connection refused
+args: backups remove abc --endpoint 127.0.0.1:1
+== backups remove abc bad endpoint
+args: backups remove abc --endpoint "bad host"
+
+# --- restore ---
+== backups restore c1a07617
+== backups restore
+== backups restore a b
+== backups restore abc --password secret
+== backups restore abc --password ""
+== backups restore abc --homeassistant
+== backups restore abc --homeassistant=true
+== backups restore abc --homeassistant=false
+== backups restore abc --homeassistant false
+== backups restore abc --homeassistant=x
+== backups restore abc --app core_ssh --app core_mosquitto
+== backups restore abc -a core_ssh
+== backups restore abc --app ""
+== backups restore abc --addons core_ssh
+== backups restore abc --addons a --app b
+== backups restore abc --folders homeassistant
+== backups restore abc -f ssl -f media
+== backups restore abc --folders ""
+== backups restore abc --location
+== backups restore abc -l
+== backups restore abc --location=mount1
+== backups restore abc --location mount1
+== backups restore abc -l=mount1
+== backups restore abc -lmount1
+== backups restore abc --location=
+== backups restore all flags
+args: backups restore abc --password p --homeassistant=false -a core_ssh -f ssl -l=share
+== backups restore abc --no-progress
+== backups restore abc --bogus
+== backups restore abc error
+args: backups restore abc --password bad
+response: error:400:Invalid password
+== backups restore abc 502
+args: backups restore abc
+response: text:502
+== backups restore abc --raw-json
+response: data:{"job_id":"x"}
+== backups restore abc connection refused
+args: backups restore abc --endpoint 127.0.0.1:1
+== backups restore abc bad endpoint
+args: backups restore abc --endpoint "bad host"
+== snapshots restore abc
+
+# --- completion ---
+== __complete backups ""
+== __complete backups re
+== __complete snapshots ""
+== __complete backups freeze ""
+== __complete backups freeze --timeout ""
+== __complete backups thaw ""
+== __complete backups reload ""
+== __complete backups options ""
+== __complete backups options -
+== __complete backups options --days-until-stale ""
+== __complete backups options --days_until_stale ""
+== __complete backups options --days_
+== __complete backups info ""
+route: GET /backups = data:{"backups":[{"slug":"c1a07617","name":"Full","date":"2025-11-01T10:00:00+00:00","type":"full"},{"slug":"deadbeef","name":"","date":"2025-11-02","type":"partial"},{"slug":"nodesc"},{"name":"noslug"},"junk",{"slug":5}]}
+== __complete backups info c
+route: GET /backups = data:{"backups":[{"slug":"c1a07617","name":"Full","date":"2025-11-01T10:00:00+00:00","type":"full"},{"slug":"deadbeef","name":"","date":"2025-11-02","type":"partial"}]}
+== __complete backups info abc ""
+route: GET /backups = data:{"backups":[{"slug":"c1a07617"}]}
+== __complete backups info (api error)
+args: __complete backups info ""
+response: error
+== __complete backups info (403 text)
+args: __complete backups info ""
+response: text:403
+== __complete backups info (no backups key)
+args: __complete backups info ""
+response: data:{"a":1}
+== __complete backups info (backups not a list)
+args: __complete backups info ""
+response: data:{"backups":{"a":1}}
+== __complete backups info (connection refused)
+args: __complete backups info "" --endpoint 127.0.0.1:1
+== __complete backups remove ""
+route: GET /backups = data:{"backups":[{"slug":"c1a07617","name":"Full","type":"full"}]}
+== __complete backups remove -
+== __complete backups remove --location ""
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active","server":"nas.local","share":"backups","type":"cifs"},{"name":"med","usage":"media","state":"active"},{"name":"failed","usage":"backup","state":"failed"},{"name":"nfs1","usage":"backup","state":"active","server":"nas","path":"/srv"}]}
+== __complete backups remove --location=
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active","server":"nas.local","share":"backups"}]}
+== __complete backups remove -l ""
+route: GET /mounts = error
+== __complete backups remove abc --location=
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active"}]}
+== __complete backups restore ""
+route: GET /backups = data:{"backups":[{"slug":"c1a07617","name":"Full","type":"full"}]}
+== __complete backups restore -
+== __complete backups restore --password ""
+== __complete backups restore --homeassistant=
+== __complete backups restore --app ""
+route: GET /addons = data:{"addons":[{"slug":"core_ssh","name":"Terminal & SSH","url":"https://example.com","state":"started","build":false,"update_available":false},{"slug":"core_mosquitto","name":"Mosquitto","state":"stopped"}]}
+== __complete backups restore abc --app ""
+route: GET /addons = data:{"addons":[{"slug":"core_ssh","name":"Terminal & SSH"}]}
+== __complete backups restore --app (api error)
+args: __complete backups restore --app ""
+route: GET /addons = error
+== __complete backups restore --folders ""
+== __complete backups restore abc --folders ""
+== __complete backups restore -f s
+== __complete backups restore --location ""
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active","server":"nas.local","share":"backups"}]}
+== __complete backups new ""
+== __complete backups new -
+== __complete backups new --name ""
+== __complete backups new --password ""
+== __complete backups new --filename ""
+== __complete backups new --uncompressed=
+== __complete backups new --homeassistant-exclude-database=
+== __complete backups new --app ""
+route: GET /addons = data:{"addons":[{"slug":"core_ssh","name":"Terminal & SSH","url":"https://example.com","state":"started","build":false,"update_available":false}]}
+== __complete backups new -a ""
+route: GET /addons = data:{"addons":[]}
+== __complete backups new --addons ""
+== __complete backups new --folders ""
+== __complete backups new -f ""
+== __complete backups new --location=
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active","server":"nas.local","share":"backups"}]}
+== __complete backups new --location ""
+route: GET /mounts = data:{"mounts":[{"name":"bk","usage":"backup","state":"active","server":"nas.local","share":"backups"}]}
+== __complete backups new --app a -
+== __completeNoDesc backups info ""
+route: GET /backups = data:{"backups":[{"slug":"c1a07617","name":"Full","type":"full"}]}

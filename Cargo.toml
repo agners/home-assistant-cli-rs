@@ -1,0 +1,22 @@
+[package]
+name = "ha"
+version = "0.1.0"
+edition = "2024"
+description = "Home Assistant CLI (Rust port of github.com/home-assistant/cli)"
+license = "Apache-2.0"
+
+[[bin]]
+name = "ha"
+path = "src/main.rs"
+
+[dependencies]
+libc = "0.2"
+serde_json = { version = "1", features = ["float_roundtrip"] }
+ureq = { version = "3", default-features = false }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

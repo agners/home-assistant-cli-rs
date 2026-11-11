@@ -1,0 +1,199 @@
+# Parity cases for `ha dns` (reference group). Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== dns
+== dns --help
+== dns bogus
+== dns info --help
+== dns logs --help
+== dns options --help
+== dns reset --help
+== dns restart --help
+== dns stats --help
+== dns update --help
+== help dns update
+
+# --- info / stats -----------------------------------------------------------
+== dns info
+response: data
+== dns in
+response: data:{"host":"172.30.32.3","servers":["dns://8.8.8.8"],"locals":[],"version":"2025.08.0","version_latest":"2025.08.0","update_available":false,"fallback":true,"llmnr":true,"mdns":true}
+== dns inf (empty data)
+args: dns inf
+== dns info --raw-json
+response: data
+== dns info raw json via env
+args: dns info
+response: data
+env: SUPERVISOR_RAW_JSON=true
+== dns info extra
+== dns info --bogus
+== dns info api error
+args: dns info
+response: error
+== dns info api error raw json
+args: dns info --raw-json
+response: error
+== dns info 404 json
+args: dns info
+response: error:404:Not found
+== dns info 401 text
+args: dns info
+response: text:401
+== dns info 403 text
+args: dns info
+response: text:403
+== dns info 500 text
+args: dns info
+response: text:500
+== dns info 500 json
+args: dns info
+response: error:500:Internal problem
+== dns info 502
+args: dns info
+response: text:502
+== dns info 418
+args: dns info
+response: error:418
+== dns info 200 not json
+args: dns info
+response: text:200
+== dns info empty 200
+args: dns info
+response: empty:200
+== dns info unknown result
+args: dns info
+response: json:{"result":"weird","message":"m","data":{"a":1}}
+== dns info data is a list
+args: dns info
+response: json:{"result":"ok","data":[1,2]}
+== dns info body is a list
+args: dns info
+response: json:[1]
+== dns info empty json body
+args: dns info
+response: raw:200:application/json:
+== dns info connection refused
+args: dns info --endpoint 127.0.0.1:1
+== dns info bad endpoint
+args: dns info --endpoint "bad host"
+== dns info without token
+args: dns info
+unset: SUPERVISOR_TOKEN
+== dns info token flag
+args: dns info --api-token flagtoken
+== dns info token env precedence
+args: dns info
+env: SUPERVISOR_API_TOKEN=apitoken
+== dns stats
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== dns status
+== dns stat --raw-json
+response: data:{"cpu_percent":0.03}
+== dns stats extra
+
+# --- logs -------------------------------------------------------------------
+== dns logs
+response: logs
+== dns log --follow
+response: logs
+== dns lg -f -n 100
+response: logs
+== dns logs --lines 1
+response: logs
+== dns logs -n0
+response: logs
+== dns logs --boot -1
+response: logs
+== dns logs -b 2 -f -v
+response: logs
+== dns logs --boot "a b/c" --verbose
+response: logs
+== dns logs -fvn5
+response: logs
+== dns logs --follow=false --verbose=true
+response: logs
+== dns logs --follow false
+== dns logs --lines x
+== dns logs --lines -1
+== dns logs --lines 4294967296
+== dns logs --lines
+== dns logs -x
+== dns logs -b
+== dns logs error status
+args: dns logs
+response: text:500:boom\n
+== dns logs json error body
+args: dns logs
+response: error:400:No such boot
+== dns logs connection refused
+args: dns logs --endpoint 127.0.0.1:1
+
+# --- options ----------------------------------------------------------------
+== dns options
+== dns options --servers dns://8.8.8.8 --servers dns://1.1.1.1
+== dns option -r dns://8.8.8.8
+== dns opt -rdns://1.1.1.1 -r=dns://9.9.9.9
+== dns opts --fallback
+== dns op --fallback=false
+== dns options --fallback=true --servers "a<b>&c"
+== dns options --fallback false
+== dns options --fallback=maybe
+== dns options --servers ""
+== dns options --servers "" --servers ""
+== dns options --servers
+== dns options api error
+args: dns options --fallback=false
+response: error:400:Invalid DNS server
+== dns options --servers a --raw-json
+
+# --- reset / restart / update -----------------------------------------------
+== dns reset
+== dns reset error
+args: dns reset
+response: error
+== dns reset --no-progress
+== dns reset extra
+== dns restart
+== dns reboot
+== dns restart data response
+args: dns restart
+response: data:{"job_id":"abc"}
+== dns update
+== dns update --version 2025.08.0
+== dns upgrade --version=5
+== dns downgrade --version ""
+== dns up
+== dns down --version
+== dns update error
+args: dns update --version 1
+response: error:400:Version 1 not found
+== dns update --raw-json --version 3
+response: data:{"a":1}
+
+# --- completion -------------------------------------------------------------
+== __complete dns ""
+== __complete dns i
+== __complete dns info ""
+== __complete dns options ""
+== __complete dns options -
+== __complete dns options --s
+== __complete dns options --fallback ""
+== __complete dns options --fallback=
+== __complete dns options --fallback=t
+== __complete dns options --servers ""
+== __complete dns options -r ""
+== __complete dns options --servers a -
+== __complete dns options --fallback=false -
+== __complete dns update --version ""
+== __complete dns logs -
+== __complete dns logs --follow=
+== __complete dns logs --lines ""
+== __complete dns logs --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete dns logs -b a
+response: data:{"boots":{"0":"abcdef","-1":"bcdefa"}}
+== __complete dns logs --boot= (api error)
+args: __complete dns logs --boot=
+response: error
+== __completeNoDesc dns ""

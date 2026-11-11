@@ -1,0 +1,207 @@
+# Parity cases for `ha resolution`. Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== resolution
+== resolution --help
+== resolutions
+== res bogus
+== help resolution
+== resolution info --help
+== resolution healthcheck --help
+== resolution check
+== resolution check --help
+== resolution check options --help
+== resolution check run --help
+== resolution issue
+== resolution issue --help
+== resolution issue dismiss --help
+== resolution issue suggestions --help
+== resolution suggestion
+== resolution suggestion --help
+== resolution suggestion apply --help
+== resolution suggestion dismiss --help
+== resolution su
+== resolution run --help
+
+# --- info -------------------------------------------------------------------
+== resolution info
+response: data:{"unsupported":[],"unhealthy":["docker"],"issues":[{"uuid":"a1b2","type":"free_space","context":"system","reference":null}],"suggestions":[{"uuid":"c3d4","type":"clear_full_backup","context":"system","reference":null,"auto":false}],"checks":[{"slug":"free_space","enabled":true}]}
+== resolutions in
+response: data
+== res inf --raw-json
+response: data
+== resolution info (empty data)
+args: resolution info
+== resolution info error
+args: resolution info
+response: error
+== resolution info extra
+
+# --- healthcheck ------------------------------------------------------------
+== resolution healthcheck
+== resolution evaluate
+== resolution run
+== resolution healthcheck --raw-json
+== resolution healthcheck --no-progress
+== resolution healthcheck error
+args: resolution healthcheck
+response: error:400:Healthcheck failed
+== resolution healthcheck extra
+
+# --- check options ----------------------------------------------------------
+== resolution check options
+== resolution check options free_space
+== resolution check options a b
+== resolution check option free_space --enabled
+== resolution checks opt free_space --enabled=false
+== resolution test opts free_space --enabled=true
+== resolution che op "a b/c?d"
+== resolution ch options "" --enabled=false
+== resolution check options free_space --enabled false
+== resolution check options free_space --enabled=maybe
+== resolution check options --enabled=false
+== resolution check options error
+args: resolution check options nope --enabled=false
+response: error:404:Check nope does not exist
+== resolution check options free_space --raw-json --enabled=false
+== resolution check options {check}
+== resolution check options ..
+
+# --- check run --------------------------------------------------------------
+== resolution check run
+== resolution check run free_space
+== resolution check execute free_space
+== resolution check ru "core security"
+== resolution check run a b
+== resolution check run error
+args: resolution check run nope
+response: error:400:Check nope does not exist
+== resolution check run free_space --raw-json
+response: data:{"a":1}
+== resolution check run free_space --no-progress
+== resolution check run free_space --enabled
+
+# --- issue ------------------------------------------------------------------
+== resolution issue dismiss
+== resolution issue dismiss a1b2
+== resolution is disable a1b2
+== resolution trouble remove "a b"
+== resolution issue dismiss a b
+== resolution issue dismiss error
+args: resolution issue dismiss nope
+response: error:400:The supplied UUID is not a valid issue
+== resolution issue dismiss 404 text
+args: resolution issue dismiss nope
+response: text:404
+== resolution issue dismiss a1b2 --raw-json
+== resolution issue dismiss connection refused
+args: resolution issue dismiss a1b2 --endpoint 127.0.0.1:1
+== resolution issue dismiss bad endpoint
+args: resolution issue dismiss a1b2 --endpoint "bad host"
+== resolution issue suggestions
+== resolution issue suggestions a1b2
+response: data:{"suggestions":[{"uuid":"c3d4","type":"clear_full_backup","context":"system","reference":null,"auto":false}]}
+== resolution issue su a1b2
+== resolution issue solutions "a/b" --raw-json
+response: data
+== resolution issue suggestions a b
+== resolution issue suggestions error
+args: resolution issue suggestions nope
+response: error:400:The supplied UUID is not a valid issue
+
+# --- suggestion -------------------------------------------------------------
+== resolution suggestion apply
+== resolution suggestion apply c3d4
+== resolution su enable c3d4
+== resolution solution run "c 3"
+== resolution suggestion apply a b
+== resolution suggestion apply error
+args: resolution suggestion apply nope
+response: error:400:The supplied UUID is not a valid suggestion
+== resolution suggestion apply c3d4 --raw-json
+response: data:{"a":1}
+== resolution suggestion dismiss
+== resolution suggestion dismiss c3d4
+== resolution suggestion disable c3d4
+== resolution suggestion remove "c 3"
+== resolution suggestion dismiss a b
+== resolution suggestion dismiss error
+args: resolution suggestion dismiss nope
+response: error:400:The supplied UUID is not a valid suggestion
+== resolution suggestion dismiss c3d4 --raw-json
+== resolution suggestion dismiss 500 text
+args: resolution suggestion dismiss c3d4
+response: text:500
+== resolution suggestion dismiss bad endpoint
+args: resolution suggestion dismiss c3d4 --endpoint "bad host"
+
+# --- completion -------------------------------------------------------------
+== __complete resolution ""
+== __complete res s
+== __complete resolution info ""
+== __complete resolution healthcheck ""
+== __complete resolution check ""
+== __complete resolution issue ""
+== __complete resolution suggestion ""
+== __complete resolution check options ""
+response: data:{"checks":[{"slug":"free_space","enabled":true},{"slug":"core_security","enabled":false},{"enabled":true},{"slug":5},"x",null]}
+== __complete resolution check options f
+response: data:{"checks":[{"slug":"free_space"},{"slug":"core_security"}]}
+== __complete resolution check options free_space ""
+response: data:{"checks":[{"slug":"free_space"}]}
+== __complete resolution check options -
+== __complete resolution check options --enabled=
+== __complete resolution check options --enabled ""
+== __complete resolution check options x --enabled=f
+== __complete resolution check run ""
+response: data:{"checks":[{"slug":"free_space"},{"slug":"core_security"}]}
+== __complete resolution check run (no checks)
+args: __complete resolution check run ""
+response: data:{"issues":[{"uuid":"a"}]}
+== __complete resolution check run (checks not a list)
+args: __complete resolution check run ""
+response: data:{"checks":{"slug":"a"}}
+== __complete resolution check run (checks null)
+args: __complete resolution check run ""
+response: data:{"checks":null}
+== __complete resolution check run (error)
+args: __complete resolution check run ""
+response: error
+== __complete resolution check run (500 text)
+args: __complete resolution check run ""
+response: text:500
+== __complete resolution check run (unknown result)
+args: __complete resolution check run ""
+response: json:{"result":"weird","data":{"checks":[{"slug":"a"}]}}
+== __complete resolution check run (raw json)
+args: __complete resolution check run "" --raw-json
+response: data:{"checks":[{"slug":"a"}]}
+== __complete resolution issue dismiss ""
+response: data:{"issues":[{"uuid":"a1b2","type":"free_space","context":"system"},{"uuid":"e5f6"},{"uuid":"g7","type":3},{"type":"no_uuid"},{"uuid":7,"type":"x"},"x"]}
+== __complete resolution issue dismiss a
+response: data:{"issues":[{"uuid":"a1b2","type":"free_space"},{"uuid":"e5f6","type":""}]}
+== __complete resolution issue dismiss a1b2 ""
+response: data:{"issues":[{"uuid":"a1b2","type":"free_space"}]}
+== __complete resolution issue suggestions ""
+response: data:{"issues":[{"uuid":"a1b2","type":"free_space"}],"suggestions":[{"uuid":"c3d4","type":"x"}]}
+== __complete resolution issue suggestions (error)
+args: __complete resolution issue suggestions ""
+response: error
+== __complete resolution issue suggestions (none)
+args: __complete resolution issue suggestions ""
+== __complete resolution suggestion apply ""
+response: data:{"issues":[{"uuid":"a1b2","type":"free_space"}],"suggestions":[{"uuid":"c3d4","type":"clear_full_backup"},{"uuid":"h8"},{"type":"t"},1]}
+== __complete resolution suggestion apply c3d4 ""
+response: data:{"suggestions":[{"uuid":"c3d4","type":"clear_full_backup"}]}
+== __complete resolution suggestion dismiss ""
+response: data:{"suggestions":[{"uuid":"c3d4","type":"clear_full_backup"}]}
+== __complete resolution suggestion dismiss c
+response: data:{"suggestions":[{"uuid":"c3d4","type":"clear_full_backup"},{"uuid":"d1","type":"x"}]}
+== __complete resolution suggestion dismiss (error)
+args: __complete resolution suggestion dismiss ""
+response: error:404:Not found
+== __complete resolution suggestion dismiss (suggestions not a list)
+args: __complete resolution suggestion dismiss ""
+response: data:{"suggestions":"x"}
+== __completeNoDesc resolution issue dismiss ""
+response: data:{"issues":[{"uuid":"a1b2","type":"free_space"}]}

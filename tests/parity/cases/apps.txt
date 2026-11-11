@@ -1,0 +1,387 @@
+# Parity cases for `ha apps`. Format: see tests/parity.py.
+
+# --- help / tree ------------------------------------------------------------
+== apps --help
+== help apps
+== apps changelog --help
+== apps info --help
+== apps install --help
+== apps logs --help
+== apps rebuild --help
+== apps restart --help
+== apps start --help
+== apps stats --help
+== apps stop --help
+== apps uninstall --help
+== apps update --help
+== help apps update
+== apps -h bogus
+== apps --bogus
+
+# --- apps (list) and deprecated aliases ---------------------------------------
+== apps
+response: data:{"addons":[{"name":"Terminal & SSH","slug":"core_ssh","state":"started","version":"9.1","update_available":false,"build":false,"url":"https://example.com/ssh","icon":true,"detached":false}]}
+== app
+response: data
+== addons
+response: data
+== addon
+== add-on
+== add-ons
+== ad
+== apps bogus
+== apps bogus extra
+== apps --raw-json
+response: data
+== apps api error
+args: apps
+response: error
+== apps 500 text
+args: apps
+response: text:500
+== apps connection refused
+args: apps --endpoint 127.0.0.1:1
+== addons info core_ssh
+== addon start ad
+== ad stop addons
+== apps start add-on
+== addons --help
+== ad info --help
+== addons logs
+== addons start
+== addons bogus --flag
+== __complete addons ""
+== __complete ad start ""
+response: data:{"addons":[{"slug":"a","state":"stopped"}]}
+
+# --- changelog ------------------------------------------------------------------
+== apps changelog core_ssh
+response: text:200:# Changelog\n\n- one\n- two\n
+== apps cl core_ssh
+response: text:200:no trailing newline
+== apps ch core_ssh
+response: text:400:Changelog not found\n
+== apps changelog json 200
+args: apps changelog core_ssh
+response: data:{"a":1}
+== apps changelog json 400
+args: apps changelog core_ssh
+response: error:400:App core_ssh does not exist
+== apps changelog empty 200
+args: apps changelog core_ssh
+response: empty:200
+== apps changelog 404
+args: apps changelog core_ssh
+response: error:404:Not found
+== apps changelog 401
+args: apps changelog core_ssh
+response: text:401
+== apps changelog 500
+args: apps changelog core_ssh
+response: text:500:boom\n
+== apps changelog 502
+args: apps changelog core_ssh
+response: text:502
+== apps changelog --raw-json
+args: apps changelog core_ssh --raw-json
+response: text:200:raw\n
+== apps changelog 404 raw json
+args: apps changelog core_ssh --raw-json
+response: error:404:Not found
+== apps changelog special slug
+args: apps changelog "a b/c?d"
+response: text:200:x\n
+== apps changelog
+== apps changelog a b
+== apps changelog ""
+== apps changelog a --bogus
+== apps changelog connection refused
+args: apps changelog core_ssh --endpoint 127.0.0.1:1
+== apps changelog bad endpoint
+args: apps changelog core_ssh --endpoint "bad host"
+== apps changelog without token
+args: apps changelog core_ssh
+unset: SUPERVISOR_TOKEN
+response: text:200:x\n
+
+# --- info -----------------------------------------------------------------------
+== apps info
+response: data
+== apps info core_ssh
+response: data:{"name":"Terminal & SSH","slug":"core_ssh","state":"started","version":"9.1","options":{"authorized_keys":[],"password":""},"network":{"22/tcp":22},"ingress":false}
+== apps in core_ssh
+== apps info --raw-json
+response: data
+== apps info a b
+== apps info "a b/c"
+== apps info ""
+== apps info error
+args: apps info nope
+response: error:400:App nope does not exist
+== apps info error raw json
+args: apps info nope --raw-json
+response: error:400:App nope does not exist
+== apps info 404
+args: apps info nope
+response: error:404:Not found
+== apps info 403 text
+args: apps info nope
+response: text:403
+== apps info connection refused
+args: apps info --endpoint 127.0.0.1:1
+== apps info bad endpoint
+args: apps info --endpoint "bad host"
+== apps inf core_ssh
+
+# --- install --------------------------------------------------------------------
+== apps install core_ssh
+== apps i core_ssh
+response: data:{"job_id":"abc"}
+== apps inst core_ssh --no-progress
+== apps install
+== apps install a b
+== apps install error
+args: apps install core_ssh
+response: error:400:App core_ssh is already installed
+== apps install --raw-json core_ssh
+== apps install 500
+args: apps install core_ssh
+response: text:500
+== apps install connection refused
+args: apps install core_ssh --endpoint 127.0.0.1:1
+
+# --- logs -----------------------------------------------------------------------
+== apps logs core_ssh
+response: logs
+== apps log core_ssh --follow
+response: logs
+== apps lg core_ssh -f -n 100
+response: logs
+== apps logs -n 1 core_ssh
+response: logs
+== apps logs core_ssh --boot -1
+response: logs
+== apps logs core_ssh -b 2 -f -v
+response: logs
+== apps logs "a b/c" --boot "x y" --verbose
+response: logs
+== apps logs core_ssh -fvn5
+response: logs
+== apps logs core_ssh --follow=false --verbose=true
+response: logs
+== apps logs core_ssh --lines 0
+response: logs
+== apps logs
+== apps logs a b
+== apps logs --follow false
+== apps logs core_ssh --follow false
+== apps logs core_ssh --lines x
+== apps logs core_ssh --lines
+== apps logs core_ssh -x
+== apps logs error status
+args: apps logs core_ssh
+response: text:500:boom\n
+== apps logs json error body
+args: apps logs core_ssh
+response: error:400:No such app
+== apps logs connection refused
+args: apps logs core_ssh --endpoint 127.0.0.1:1
+== apps logs bad endpoint
+args: apps logs core_ssh --endpoint "bad host"
+
+# --- rebuild --------------------------------------------------------------------
+== apps rebuild local_my_app
+== apps rb local_my_app --force
+== apps reinstall local_my_app --force=true
+== apps rebuild local_my_app --force=false
+== apps rebuild --force local_my_app
+== apps rebuild local_my_app --force false
+== apps rebuild local_my_app --force=maybe
+== apps rebuild
+== apps rebuild --force
+== apps rebuild a b
+== apps rebuild error
+args: apps rebuild core_ssh --force
+response: error:400:Can't rebuild a image based app
+== apps rebuild --raw-json x --force
+response: data:{"a":1}
+== apps rebuild connection refused
+args: apps rebuild x --endpoint 127.0.0.1:1
+
+# --- restart / start / stop -----------------------------------------------------
+== apps restart core_ssh
+== apps reboot core_ssh
+response: data
+== apps restart
+== apps restart a b
+== apps restart error
+args: apps restart core_ssh
+response: error:400:App is not running
+== apps restart --raw-json core_ssh
+== apps restart "a b/c"
+== apps start core_ssh
+== apps run core_ssh
+== apps st core_ssh
+response: data:{"job_id":"abc"}
+== apps start
+== apps start a b
+== apps start error
+args: apps start core_ssh
+response: error:400:App is already running
+== apps start 404 text
+args: apps start core_ssh
+response: text:404
+== apps start --raw-json core_ssh
+response: error
+== apps stop core_ssh
+== apps halt core_ssh
+== apps shutdown core_ssh
+== apps quit core_ssh
+== apps stop
+== apps stop a b
+== apps stop error
+args: apps stop core_ssh
+response: error:500:Internal problem
+== apps stop --raw-json core_ssh
+
+# --- stats ----------------------------------------------------------------------
+== apps stats core_ssh
+response: data:{"cpu_percent":0.03,"memory_usage":18866176,"memory_limit":16705269760,"memory_percent":0.11,"network_rx":0,"network_tx":0,"blk_read":0,"blk_write":0}
+== apps status core_ssh
+== apps stat core_ssh --raw-json
+response: data:{"cpu_percent":0.03}
+== apps stats
+== apps stats a b
+== apps stats error
+args: apps stats core_ssh
+response: error:400:App is not running
+== apps stats connection refused
+args: apps stats core_ssh --endpoint 127.0.0.1:1
+
+# --- uninstall ------------------------------------------------------------------
+== apps uninstall core_ssh
+== apps remove core_ssh --remove-config
+== apps delete core_ssh --remove-config=true
+== apps del core_ssh --remove-config=false
+== apps rem --remove-config core_ssh
+== apps un core_ssh
+== apps uninst core_ssh
+== apps uninstall core_ssh --remove-config false
+== apps uninstall core_ssh --remove-config=maybe
+== apps uninstall core_ssh --remove_config
+== apps uninstall
+== apps uninstall --remove-config
+== apps uninstall a b
+== apps uninstall error
+args: apps uninstall core_ssh --remove-config
+response: error:400:App core_ssh is not installed
+== apps uninstall --raw-json core_ssh --remove-config
+== apps uninstall with stdin
+args: apps uninstall core_ssh
+stdin: n\n
+
+# --- update ---------------------------------------------------------------------
+== apps update core_ssh
+== apps upgrade core_ssh --backup
+== apps up core_ssh --backup=true
+== apps update core_ssh --backup=false
+== apps update --backup core_ssh
+== apps update core_ssh --backup false
+== apps update core_ssh --backup=maybe
+== apps update core_ssh --version 1
+== apps update core_ssh --no-progress --backup
+== apps update
+== apps update --backup
+== apps update a b
+== apps update error
+args: apps update core_ssh
+response: error:400:No update available for app core_ssh
+== apps update --raw-json core_ssh --backup
+response: data:{"job_id":"abc"}
+== apps update connection refused
+args: apps update core_ssh --endpoint 127.0.0.1:1
+== apps update bad endpoint
+args: apps update core_ssh --endpoint "bad host"
+== apps down core_ssh
+
+# --- completion -----------------------------------------------------------------
+== __complete apps ""
+== __complete apps re
+== __complete app ""
+== __completeNoDesc apps ""
+== __complete apps -
+== __complete apps info ""
+response: file:apps_list.json
+== __complete apps info c
+response: file:apps_list.json
+== __complete apps info core_ssh ""
+response: file:apps_list.json
+== __completeNoDesc apps info ""
+response: file:apps_list.json
+== __complete apps changelog ""
+response: file:apps_list.json
+== __complete apps logs ""
+response: file:apps_list.json
+== __complete apps rebuild ""
+response: file:apps_list.json
+== __complete apps rb ""
+response: file:apps_list.json
+== __complete apps restart ""
+response: file:apps_list.json
+== __complete apps start ""
+response: file:apps_list.json
+== __complete apps run ""
+response: file:apps_list.json
+== __complete apps stats ""
+response: file:apps_list.json
+== __complete apps stop ""
+response: file:apps_list.json
+== __complete apps uninstall ""
+response: file:apps_list.json
+== __complete apps update ""
+response: file:apps_list.json
+== __complete apps upgrade ""
+response: file:apps_list.json
+== __complete apps install ""
+response: file:apps_store.json
+== __complete apps i ""
+response: file:apps_store.json
+== __complete apps install a ""
+response: file:apps_store.json
+== __complete apps info (api error)
+args: __complete apps info ""
+response: error
+== __complete apps info (error result with 200)
+args: __complete apps info ""
+response: json:{"result":"error","data":{"addons":[{"slug":"a"}]}}
+== __complete apps info (text)
+args: __complete apps info ""
+response: text:200
+== __complete apps info (addons not a list)
+args: __complete apps info ""
+response: data:{"addons":{"slug":"a"}}
+== __complete apps info (no addons)
+args: __complete apps info ""
+== __complete apps info (connection refused)
+args: __complete apps info "" --endpoint 127.0.0.1:1
+== __complete apps install (api error)
+args: __complete apps install ""
+response: error
+== __complete apps logs core_ssh -
+== __complete apps logs core_ssh --follow=
+== __complete apps logs core_ssh --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete apps logs --boot ""
+response: data:{"boots":{"0":"abcdef"}}
+== __complete apps rebuild -
+== __complete apps rebuild x --force=
+== __complete apps rebuild x --fo
+== __complete apps uninstall -
+== __complete apps uninstall x --remove-config=
+== __complete apps uninstall x --remove-config ""
+== __complete apps uninstall x --remove-config=t
+== __complete apps update -
+== __complete apps update x --backup=
+== __complete apps update x --backup ""
+== __complete apps update --backup=true ""
+response: file:apps_list.json

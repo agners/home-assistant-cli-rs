@@ -1,0 +1,12 @@
+{"result":"ok","data":{"addons":[
+{"name":"Terminal & SSH","slug":"core_ssh","state":"started","build":false,"update_available":false,"url":"https://example.com/ssh"},
+{"name":"Mosquitto broker","slug":"core_mosquitto","state":"stopped","build":false,"update_available":true,"url":""},
+{"name":"","slug":"local_my_app","state":"unknown","build":true,"update_available":true},
+{"slug":"bare"},
+{"name":"No slug"},
+{"name":"Odd types","slug":"odd","state":1,"build":"no","update_available":"false","url":5},
+{"name":"Bad slug","slug":7},
+"not an object",
+null,
+{"name":"Only url","slug":"only_url","url":"https://example.com/x","state":"started","build":true,"update_available":false}
+]}}

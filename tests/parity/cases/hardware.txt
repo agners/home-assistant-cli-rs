@@ -1,0 +1,48 @@
+# Parity cases for `ha hardware`. Format: see tests/parity.py.
+
+== hardware
+== hw
+== hardware --help
+== hardware bogus
+== hardware audio --help
+== hardware info --help
+== help hardware info
+
+== hardware info
+response: data:{"devices":[{"name":"ttyUSB0","sysfs":"/sys/devices/x","dev_path":"/dev/ttyUSB0","subsystem":"tty","by_id":null,"attributes":{"DEVNAME":"/dev/ttyUSB0"},"children":[]}]}
+== hw in
+response: data
+== hardware inf --raw-json
+response: data
+== hardware info extra
+== hardware info --bogus
+== hardware info api error
+args: hardware info
+response: error
+== hardware info api error raw json
+args: hardware info --raw-json
+response: error:500:Internal problem
+== hardware info 403 text
+args: hardware info
+response: text:403
+== hardware info connection refused
+args: hardware info --endpoint 127.0.0.1:1
+
+== hardware audio
+response: data:{"audio":{"input":{"0,0":"Mic"},"output":{"1,0":"HDMI"}}}
+== hardware sounds
+== hardware snd
+response: data
+== hw au --raw-json
+response: data
+== hardware audio extra
+== hardware audio api error
+args: hardware audio
+response: error:400:No audio
+
+== __complete hardware ""
+== __complete hardware a
+== __complete hardware info ""
+== __complete hardware audio ""
+== __complete hardware info -
+== __completeNoDesc hardware ""

@@ -1,0 +1,16 @@
+{"result":"ok","data":{"interfaces":[
+ {"interface":"eth0","type":"ethernet","enabled":true},
+ {"interface":"eth1","type":"ethernet","enabled":false},
+ {"interface":"wlan0","type":"wireless","enabled":true},
+ {"interface":"wlan1","type":"wireless","enabled":false},
+ {"interface":"wlan2","type":"wireless","enabled":"true"},
+ {"interface":"wlan3","type":"wireless"},
+ {"interface":"eth0.10","type":"vlan","enabled":true},
+ {"interface":"","type":"ethernet","enabled":true},
+ {"interface":5,"type":"ethernet","enabled":true},
+ {"type":"ethernet","enabled":true},
+ {"interface":"notype0","enabled":true},
+ {"interface":"badtype0","type":7,"enabled":true},
+ "not-an-object",
+ null
+]}}
